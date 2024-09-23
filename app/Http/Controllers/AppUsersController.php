@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\AppUser;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\AppUser\StoreRequest;
+use App\Http\Requests\AppUser\UpdateRequest;
 use Inertia\Inertia;
 
 class AppUsersController extends Controller
@@ -15,7 +16,7 @@ class AppUsersController extends Controller
     public function index()
     {
         return Inertia::render('AppUsers/Index', [
-            'users' => AppUser::all()
+            'page' => AppUser::query()->paginate(10)
         ]);
     }
 
@@ -30,9 +31,11 @@ class AppUsersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        $user = new AppUser($request->all());
+        $res = $user->save();
+        return redirect('users');
     }
 
     /**
@@ -48,15 +51,20 @@ class AppUsersController extends Controller
      */
     public function edit(AppUser $user)
     {
-        //
+        return Inertia::render('AppUsers/Create', [
+            'user' => $user
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, AppUser $user)
+    public function update(UpdateRequest $request, AppUser $user)
     {
-        //
+        $user->update($request->all());
+        return Inertia::render('AppUsers/Create', [
+            'user' => $user
+        ]);
     }
 
     /**
@@ -64,6 +72,7 @@ class AppUsersController extends Controller
      */
     public function destroy(AppUser $user)
     {
-        //
+        $user->deleteOrFail();
+        return response()->noContent();
     }
 }
