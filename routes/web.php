@@ -30,18 +30,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::resource('users', AppUsersController::class);
-    Route::resource('projects', ProjectsController::class)->names([
-        'index' => 'projects',
-        'create' => 'projects.create',
-        'edit' => 'projects.edit',
-        'delete' => 'projects.delete'
-    ]);
-    Route::resource('clients', ClientsController::class)->names([
-        'index' => 'clients'
-    ]);
-    Route::resource('tasks', TasksController::class)->names([
-        'index' => 'tasks'
+    Route::resources([
+        'users' => AppUsersController::class,
+        'projects' => ProjectsController::class,
+        'tasks' => TasksController::class,
+        'clients' => ClientsController::class
     ]);
 });
 

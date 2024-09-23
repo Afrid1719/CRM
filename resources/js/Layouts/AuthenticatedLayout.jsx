@@ -35,20 +35,20 @@ export default function Authenticated({ user, header, children }) {
                                     Users
                                 </NavLink>
                                 <NavLink
-                                    href={route("clients")}
-                                    active={route().current("clients")}
+                                    href={route("clients.index")}
+                                    active={route().current("clients.index")}
                                 >
                                     Clients
                                 </NavLink>
                                 <NavLink
-                                    href={route("projects")}
-                                    active={route().current("projects")}
+                                    href={route("projects.index")}
+                                    active={route().current("projects.index")}
                                 >
                                     Projects
                                 </NavLink>
                                 <NavLink
-                                    href={route("tasks")}
-                                    active={route().current("tasks")}
+                                    href={route("tasks.index")}
+                                    active={route().current("tasks.index")}
                                 >
                                     Tasks
                                 </NavLink>
