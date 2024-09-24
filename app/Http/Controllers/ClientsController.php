@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Client\StoreRequest;
+use App\Http\Requests\Client\UpdateRequest;
 use Inertia\Inertia;
 
 class ClientsController extends Controller
@@ -14,7 +15,9 @@ class ClientsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Clients');
+        return Inertia::render('Clients/Index', [
+            'page' => Client::query()->paginate(10),
+        ]);
     }
 
     /**
@@ -22,15 +25,17 @@ class ClientsController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Clients/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        $client = new Client($request->all());
+        $client->save();
+        return redirect('clients');
     }
 
     /**
@@ -46,15 +51,20 @@ class ClientsController extends Controller
      */
     public function edit(Client $client)
     {
-        //
+        return Inertia::render('Clients/Create', [
+            'client' => $client,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Client $client)
+    public function update(UpdateRequest $request, Client $client)
     {
-        //
+        $client->update($request->all());
+        return Inertia::render('Clients/Create', [
+            'client' => $client,
+        ]);
     }
 
     /**
@@ -62,6 +72,7 @@ class ClientsController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        $client->deleteOrFail();
+        return Inertia::render('Clients/Index');
     }
 }

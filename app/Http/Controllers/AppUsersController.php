@@ -34,7 +34,7 @@ class AppUsersController extends Controller
     public function store(StoreRequest $request)
     {
         $user = new AppUser($request->all());
-        $res = $user->save();
+        $user->save();
         return redirect('users');
     }
 
