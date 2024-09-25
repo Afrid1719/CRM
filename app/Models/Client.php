@@ -15,4 +15,9 @@ class Client extends Model
     public $incrementing = false;
 
     protected $fillable = ['name', 'email', 'vat', 'address'];
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'assigned_client');
+    }
 }

@@ -16,17 +16,22 @@ class Project extends Model
      */
     protected $table = 'projects';
 
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'project_id';
+    protected $fillable = [
+        'title',
+        'description',
+        'deadline',
+        'assigned_user',
+        'assigned_client',
+        'status',
+    ];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = true;
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'assigned_client');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(AppUser::class, 'assigned_user');
+    }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Http\Controllers\Controller;
+use App\Models\AppUser;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,7 +17,9 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Projects/Index');
+        return Inertia::render('Projects/Index', [
+            'page' => Project::with('client', 'user')->paginate(10),
+        ]);
     }
 
     /**
@@ -23,7 +27,10 @@ class ProjectsController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Projects/Create');
+        return Inertia::render('Projects/Create', [
+            'users' => AppUser::select('id', 'name')->get(),
+            'clients' => Client::select('id', 'name')->get()
+        ]);
     }
 
     /**
