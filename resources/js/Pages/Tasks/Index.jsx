@@ -2,6 +2,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import { useState } from "react";
 import axios from "axios";
+import Pagination from "@/Components/Pagination";
 
 export default function Index({ auth, page }) {
     const [isDeleting, setIsDeleting] = useState(false);
@@ -17,8 +18,9 @@ export default function Index({ auth, page }) {
                     location.reload();
                 })
                 .catch((err) => console.error(err.message));
+        } else {
+            setIsDeleting(false);
         }
-        setIsDeleting(false);
     };
 
     const updateStatus = (id, status) => {
@@ -249,24 +251,11 @@ export default function Index({ auth, page }) {
                                     ))}
                                 </tbody>
                             </table>
-                            <div className="flex mx-auto justify-center mt-4 gap-x-3">
-                                {page.prev_page_url && (
-                                    <Link
-                                        href={page.prev_page_url}
-                                        className="px-2 py-1 text-white bg-blue-400 rounded text-sm"
-                                    >
-                                        Prev
-                                    </Link>
-                                )}
-                                {page.next_page_url && (
-                                    <Link
-                                        href={page.next_page_url}
-                                        className="px-2 py-1 text-white bg-blue-400 rounded text-sm"
-                                    >
-                                        Next
-                                    </Link>
-                                )}
-                            </div>
+                            <Pagination
+                                prevUrl={page.prev_page_url}
+                                nextUrl={page.next_page_url}
+                                links={page.links}
+                            />
                         </div>
                     </div>
                 </div>

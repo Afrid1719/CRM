@@ -30,25 +30,25 @@ export default function Authenticated({ user, header, children }) {
                                 </NavLink>
                                 <NavLink
                                     href={route("users.index")}
-                                    active={route().current("users.index")}
+                                    active={route().current("users.*")}
                                 >
                                     Users
                                 </NavLink>
                                 <NavLink
                                     href={route("clients.index")}
-                                    active={route().current("clients.index")}
+                                    active={route().current("clients.*")}
                                 >
                                     Clients
                                 </NavLink>
                                 <NavLink
                                     href={route("projects.index")}
-                                    active={route().current("projects.index")}
+                                    active={route().current("projects.*")}
                                 >
                                     Projects
                                 </NavLink>
                                 <NavLink
                                     href={route("tasks.index")}
-                                    active={route().current("tasks.index")}
+                                    active={route().current("tasks.*")}
                                 >
                                     Tasks
                                 </NavLink>
@@ -155,6 +155,30 @@ export default function Authenticated({ user, header, children }) {
                             active={route().current("dashboard")}
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("users.index")}
+                            active={route().current("users.*")}
+                        >
+                            Users
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("clients.index")}
+                            active={route().current("clients.*")}
+                        >
+                            Clients
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("projects.index")}
+                            active={route().current("projects.*")}
+                        >
+                            Projects
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("tasks.index")}
+                            active={route().current("tasks.*")}
+                        >
+                            Tasks
                         </ResponsiveNavLink>
                     </div>
 
