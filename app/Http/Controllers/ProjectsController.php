@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Project\StoreRequest;
+use App\Http\Requests\Project\UpdateRequest;
 use App\Models\AppUser;
 use App\Models\Client;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProjectsController extends Controller
@@ -36,9 +37,11 @@ class ProjectsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        $project = new Project($request->all());
+        $project->save();
+        return redirect('projects');
     }
 
     /**
@@ -54,15 +57,24 @@ class ProjectsController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        return Inertia::render('Projects/Create', [
+            'users' => AppUser::select('id', 'name')->get(),
+            'clients' => Client::select('id', 'name')->get(),
+            'project' => $project,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project)
+    public function update(UpdateRequest $request, Project $project)
     {
-        //
+        $project->update($request->all());
+        return Inertia::render('Projects/Create', [
+            'users' => AppUser::select('id', 'name')->get(),
+            'clients' => Client::select('id', 'name')->get(),
+            'project' => $project,
+        ]);
     }
 
     /**
@@ -70,6 +82,7 @@ class ProjectsController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $project->deleteOrFail();
+        return Inertia::render('Projects/Index');
     }
 }
