@@ -20,4 +20,9 @@ class Client extends Model
     {
         return $this->hasMany(Project::class, 'assigned_client');
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'related_to_client');
+    }
 }

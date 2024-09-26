@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
         'tasks' => TasksController::class,
         'clients' => ClientsController::class
     ]);
+    Route::put('tasks/{task}/update-status', [TasksController::class, 'updateStatus'])->name('tasks.update-status');
 });
 
 require __DIR__ . '/auth.php';

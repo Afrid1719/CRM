@@ -32,4 +32,9 @@ class AppUser extends Model
     {
         return $this->hasMany(Project::class, 'assigned_user');
     }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'assigned_user');
+    }
 }

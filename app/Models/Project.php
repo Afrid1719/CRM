@@ -44,4 +44,9 @@ class Project extends Model
     {
         return $this->belongsTo(AppUser::class, 'assigned_user');
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'related_to_project');
+    }
 }

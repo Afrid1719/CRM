@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Project;
+namespace App\Http\Requests\Task;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -21,18 +21,18 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $project = $this->route('project');
+        $task = $this->route('task');
         return [
-            'title' => ['required', 'string', function ($attribute, $value, $fail) use ($project) {
-                if ($project && $project->title !== $value) {
+            'title' => ['required', 'string', function ($attribute, $value, $fail) use ($task) {
+                if ($task && $task->title !== $value) {
                     $fail('The title cannot be changed.');
                 }
             }],
             'description' => ['required', 'string', 'max:250'],
-            'deadline' => ['nullable', 'date'],
-            'assigned_user' => ['required', 'string', 'exists:App\Models\AppUser,id'],
-            'assigned_client' => ['required', 'string', 'exists:App\Models\Client,id'],
-            'status' => ['required', 'string', 'in:Open,In progress,Completed'],
+            'status' => ['nullable', 'boolean'],
+            'assinged_to' => ['required', 'string', 'exists:App\Models\AppUser,id'],
+            'for_client' => ['required', 'string', 'exists:App\Models\Client,id'],
+            'related_to_project' => ['required', 'string', 'exists:App\Models\Project,id'],
         ];
     }
 }

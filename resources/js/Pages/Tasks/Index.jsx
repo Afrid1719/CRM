@@ -5,12 +5,12 @@ import axios from "axios";
 
 export default function Index({ auth, page }) {
     const [isDeleting, setIsDeleting] = useState(false);
-    const deleteProject = (id) => {
+    const deleteTask = (id) => {
         setIsDeleting(true);
         if (confirm("Are you sure you want to delete this project?")) {
             axios
                 .request({
-                    url: route("projects.destroy", { project: id }),
+                    url: route("tasks.destroy", { task: id }),
                     method: "DELETE"
                 })
                 .then(() => {
@@ -21,26 +21,39 @@ export default function Index({ auth, page }) {
         setIsDeleting(false);
     };
 
+    const updateStatus = (id, status) => {
+        axios
+            .request({
+                url: route("tasks.update-status", { task: id }),
+                method: "PUT",
+                data: { status }
+            })
+            .then(() => {
+                location.reload();
+            })
+            .catch((err) => console.error(err.message));
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Projects
+                    Tasks
                 </h2>
             }
         >
-            <Head title="Projects" />
+            <Head title="Tasks" />
 
             <div className="py-12">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm sm:rounded-lg">
                         <div className="w-full flex justify-end p-3">
                             <Link
-                                href={route("projects.create")}
+                                href={route("tasks.create")}
                                 className="inline-block p-2 border border:border-gray-800 dark:border-white rounded-md font-normal font-sans text-sm"
                             >
-                                Add Project
+                                ADD TASK
                             </Link>
                         </div>
                         <div className="p-4 pt-0 px-0 overflow-auto">
@@ -64,38 +77,38 @@ export default function Index({ auth, page }) {
                                         </th>
                                         <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                                             <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
-                                                Deadline
-                                            </p>
-                                        </th>
-                                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                            <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
-                                                Assigned User
-                                            </p>
-                                        </th>
-                                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                            <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
-                                                Assigned Client
-                                            </p>
-                                        </th>
-                                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                            <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
                                                 Status
                                             </p>
                                         </th>
+                                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                                            <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+                                                Assigned To
+                                            </p>
+                                        </th>
+                                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                                            <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+                                                Client
+                                            </p>
+                                        </th>
+                                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                                            <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+                                                Project Belongs To
+                                            </p>
+                                        </th>
                                         <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50 ">
-                                            <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-end gap-2 font-normal leading-none opacity-70">
+                                            <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-center gap-2 font-normal leading-none opacity-70">
                                                 Actions
                                             </p>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {page.data.map((project) => (
-                                        <tr key={project.id}>
+                                    {page.data.map((task) => (
+                                        <tr key={task.id}>
                                             <td className="p-4 border-b border-blue-gray-50">
                                                 <div className="flex items-center gap-3">
                                                     <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
-                                                        {project.id}
+                                                        {task.id}
                                                     </p>
                                                 </div>
                                             </td>
@@ -104,40 +117,16 @@ export default function Index({ auth, page }) {
                                                 <div className="flex items-center gap-3">
                                                     <div className="flex flex-col">
                                                         <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-                                                            {project.title}
+                                                            {task.title}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </td>
 
                                             <td className="p-4 border-b border-blue-gray-50">
-                                                <div className="flex items-center gap-3">
+                                                <div className="flex items-center gap-3 w-64">
                                                     <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
-                                                        {project.description}
-                                                    </p>
-                                                </div>
-                                            </td>
-
-                                            <td className="p-4 border-b border-blue-gray-50">
-                                                <div className="flex items-center gap-3">
-                                                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
-                                                        {project.deadline}
-                                                    </p>
-                                                </div>
-                                            </td>
-
-                                            <td className="p-4 border-b border-blue-gray-50">
-                                                <div className="flex items-center gap-3">
-                                                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
-                                                        {project.user.name}
-                                                    </p>
-                                                </div>
-                                            </td>
-
-                                            <td className="p-4 border-b border-blue-gray-50">
-                                                <div className="flex items-center gap-3">
-                                                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
-                                                        {project.client.name}
+                                                        {task.description}
                                                     </p>
                                                 </div>
                                             </td>
@@ -146,34 +135,78 @@ export default function Index({ auth, page }) {
                                                 <div className="w-max">
                                                     <div
                                                         className={`relative grid items-center font-sans font-bold uppercase whitespace-nowrap select-none ${
-                                                            project.status ===
-                                                            "Completed"
+                                                            task.status
                                                                 ? "bg-green-500/20 text-green-600"
-                                                                : project.status ===
-                                                                  "In progress"
-                                                                ? "bg-yellow-500/20 text-yellow-600"
                                                                 : "bg-blue-500/20 text-blue-600"
                                                         } py-1 px-2 text-xs rounded-md opacity-100`}
                                                     >
                                                         <span className="">
-                                                            {project.status}
+                                                            {task.status
+                                                                ? "Completed"
+                                                                : "Open"}
                                                         </span>
                                                     </div>
                                                 </div>
                                             </td>
 
+                                            <td className="p-4 border-b border-blue-gray-50">
+                                                <div className="flex items-center gap-3">
+                                                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
+                                                        {task.user.name}
+                                                    </p>
+                                                </div>
+                                            </td>
+
+                                            <td className="p-4 border-b border-blue-gray-50">
+                                                <div className="flex items-center gap-3">
+                                                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
+                                                        {task.client.name}
+                                                    </p>
+                                                </div>
+                                            </td>
+
+                                            <td className="p-4 border-b border-blue-gray-50">
+                                                <div className="flex items-center gap-3">
+                                                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
+                                                        {task.project.title}
+                                                    </p>
+                                                </div>
+                                            </td>
+
                                             <td className="p-4 border-b border-blue-gray-50 text-right">
+                                                {task.status ? (
+                                                    <button
+                                                        className="px-2 py-1 bg-red-500 text-white rounded-lg text-sm"
+                                                        onClick={() =>
+                                                            updateStatus(
+                                                                task.id,
+                                                                false
+                                                            )
+                                                        }
+                                                    >
+                                                        Mark As Open
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        className="px-2 py-1 bg-green-500 text-white rounded-lg text-sm"
+                                                        onClick={() =>
+                                                            updateStatus(
+                                                                task.id,
+                                                                true
+                                                            )
+                                                        }
+                                                    >
+                                                        Mark As Completed
+                                                    </button>
+                                                )}
                                                 <Link
                                                     className={`inline-block relative align-middle select-none font-sans font-medium text-center uppercase transition-all ${
                                                         isDeleting &&
                                                         "pointer-events-none"
                                                     } w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30`}
-                                                    href={route(
-                                                        "projects.edit",
-                                                        {
-                                                            project: project.id
-                                                        }
-                                                    )}
+                                                    href={route("tasks.edit", {
+                                                        task: task.id
+                                                    })}
                                                     role="button"
                                                 >
                                                     <span className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
@@ -192,9 +225,7 @@ export default function Index({ auth, page }) {
                                                     className="relative align-middle select-none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
                                                     type="button"
                                                     onClick={() =>
-                                                        deleteProject(
-                                                            project.id
-                                                        )
+                                                        deleteTask(task.id)
                                                     }
                                                     disabled={isDeleting}
                                                 >
