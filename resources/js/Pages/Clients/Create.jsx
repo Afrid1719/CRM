@@ -4,6 +4,7 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
+import Checkbox from "@/Components/Checkbox";
 
 export default function Create({ auth, client = null }) {
     const { data, setData, post, put, processing, errors, wasSuccessful } =
@@ -11,7 +12,8 @@ export default function Create({ auth, client = null }) {
             name: client?.name || "",
             vat: client?.vat || "",
             address: client?.address || "",
-            email: client?.email || ""
+            email: client?.email || "",
+            isActive: client?.isActive || true
         });
 
     const submit = (e) => {
@@ -172,6 +174,20 @@ export default function Create({ auth, client = null }) {
                                     <InputError
                                         message={errors.address}
                                         className="mt-2"
+                                    />
+                                </div>
+
+                                <div className="flex flex-row items-center mt-4">
+                                    <Checkbox
+                                        value={data.isActive}
+                                        id="isActive"
+                                        name="isActive"
+                                        className="mr-2 w-8 h-8 cursor-pointer"
+                                    />
+                                    <InputLabel
+                                        htmlFor="isActive"
+                                        value="Active"
+                                        className="cursor-pointer"
                                     />
                                 </div>
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,21 @@ class Client extends Model
     protected $keyType = 'uuid';
     public $incrementing = false;
 
+    protected $casts = ['is_active' => 'boolean'];
+
     protected $fillable = ['name', 'email', 'vat', 'address'];
+
+    protected $attributes = ['is_active' => true];
+
+    public function scopeActive(Builder $query)
+    {
+        $query->where('is_active', true);
+    }
+
+    public function scopeInactive(Builder $query)
+    {
+        $query->where('is_active', false);
+    }
 
     public function projects()
     {

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,9 +31,17 @@ class Project extends Model
     {
         parent::boot();
 
+        // This is just for practice to save in a different format
         static::saving(function ($model) {
             $model->deadline = Carbon::parse($model->deadline)->format('Y-m-d');
         });
+    }
+
+    protected function deadline(): Attribute
+    {
+        return Attribute::make(
+            get: fn(string $value) => date('d/n/Y', strtotime($value))
+        );
     }
 
     public function client()
