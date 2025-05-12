@@ -96,7 +96,7 @@ class ClientsController extends Controller
     public function activation(ClientActivationRequest $request, Client $client)
     {
         $client->is_active = $request->isActive;
-        $client->save(); // $client->update['is_active' => $request->isActive] did not work
+        $client->save(); // $client->update(['is_active' => $request->isActive]) did not work
         return Inertia::render('Clients/Index');
     }
 }

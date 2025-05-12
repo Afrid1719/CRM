@@ -43,4 +43,9 @@ class Task extends Model
     {
         return $this->belongsTo(Client::class, 'for_client');
     }
+
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class, 'task_id');
+    }
 }

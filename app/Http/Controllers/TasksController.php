@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Task\StoreRequest;
+use App\Http\Requests\Task\UpdateRequest;
 use App\Models\AppUser;
 use App\Models\Client;
 use App\Models\Project;
@@ -41,7 +42,6 @@ class TasksController extends Controller
     public function store(StoreRequest $request)
     {
         $task = Task::create($request->all());
-        logger($task);
         $task->save();
         return redirect('tasks');
     }
@@ -51,7 +51,7 @@ class TasksController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        return redirect("tasks/{$task->id}/edit");
     }
 
     /**
@@ -63,21 +63,34 @@ class TasksController extends Controller
             'users' => AppUser::select('id', 'name')->get(),
             'clients' => Client::select('id', 'name')->get(),
             'projects' => Project::select('id', 'title')->get(),
-            'task' => $task,
+            'task' => $task->load('attachments'),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(UpdateRequest $request, Task $task)
     {
         $task->update($request->all());
+
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                if ($file instanceof \Illuminate\Http\UploadedFile) {
+                    $path = $file->storeAs('uploads', $file->getClientOriginalName());
+                    $task->attachments()->create([
+                        'filename' => $file->getClientOriginalName(),
+                        'path' => $path,
+                    ]);
+                }
+            }
+        }
+
         return Inertia::render("Tasks/Create", [
             'users' => AppUser::select('id', 'name')->get(),
             'clients' => Client::select('id', 'name')->get(),
             'projects' => Project::select('id', 'title')->get(),
-            'task' => $task,
+            'task' => $task->load('attachments'),
         ]);
     }
 

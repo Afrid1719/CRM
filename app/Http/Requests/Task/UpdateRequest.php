@@ -14,6 +14,13 @@ class UpdateRequest extends FormRequest
         return true;
     }
 
+    public function validationData()
+    {
+        $data = $this->all();
+        $data['status'] = filter_var($data['status'], FILTER_VALIDATE_BOOLEAN);
+        return $data;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,11 +35,17 @@ class UpdateRequest extends FormRequest
                     $fail('The title cannot be changed.');
                 }
             }],
-            'description' => ['required', 'string', 'max:250'],
+            'description' => ['nullable', 'string', 'max:250'],
             'status' => ['nullable', 'boolean'],
-            'assinged_to' => ['required', 'string', 'exists:App\Models\AppUser,id'],
-            'for_client' => ['required', 'string', 'exists:App\Models\Client,id'],
-            'related_to_project' => ['required', 'string', 'exists:App\Models\Project,id'],
+            'assinged_to' => ['nullable', 'string', 'exists:App\Models\AppUser,id'],
+            'for_client' => ['nullable', 'string', 'exists:App\Models\Client,id'],
+            'related_to_project' => ['nullable', 'string', 'exists:App\Models\Project,id'],
+            'attachments.*' => [
+                'sometimes', // Only validate if the field is present
+                'file',      // Ensure it's a file
+                'mimes:jpg,jpeg,png,pdf', // Allowed file types
+                'max:5120',  // Maximum file size in kilobytes (5MB)
+            ],
         ];
     }
 }

@@ -35,6 +35,11 @@ class StoreRequest extends FormRequest
             'assigned_to' => ['required', 'string', 'exists:App\Models\AppUser,id'],
             'for_client' => ['required', 'string', 'exists:App\Models\Client,id'],
             'related_to_project' => ['required', 'string', 'exists:App\Models\Project,id'],
+            'attachments.*' => [
+                'nullable',
+                'file',
+                'max:5120',
+            ],
         ];
     }
 }

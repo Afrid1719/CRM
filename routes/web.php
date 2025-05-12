@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\AppUsersController;
+use App\Http\Controllers\AttachmentsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('tasks/{task}', [TasksController::class, 'update'])->name('tasks.update');
     Route::resources([
         'users' => AppUsersController::class,
         'projects' => ProjectsController::class,
@@ -38,6 +40,7 @@ Route::middleware('auth')->group(function () {
     ]);
     Route::put('tasks/{task}/update-status', [TasksController::class, 'updateStatus'])->name('tasks.update-status');
     Route::put('clients/{client}/activation', [ClientsController::class, 'activation'])->name('clients.activation');
+    Route::delete('attachments/{attachment}', [AttachmentsController::class, 'destroy'])->name('attachments.destroy');
 });
 
 require __DIR__ . '/auth.php';

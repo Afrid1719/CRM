@@ -38,6 +38,6 @@ class Client extends Model
 
     public function tasks()
     {
-        return $this->hasMany(Task::class, 'related_to_client');
+        return $this->hasMany(Task::class, 'for_client');
     }
 }
