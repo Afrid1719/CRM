@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 import InputError from "@/Components/InputError";
@@ -16,22 +17,25 @@ export default function Create({ auth, users, clients, projects, task }) {
         for_client: task?.for_client || "",
         related_to_project: task?.related_to_project || "",
         status: task?.status || false,
-        attachments: task?.attachments || []
+        attachments: null
     });
+
+    const [attachedFiles, setAttachedFiles] = useState(task?.attachments || []);
+    const [clearFileInput, setClearFileInput] = useState(false);
 
     const submit = (e) => {
         e.preventDefault();
-
         if (task) {
             post(route("tasks.update", { task: task.id }), {
                 forceFormData: true,
                 preserveScroll: true,
                 preserveState: true,
-                onSuccess: () => {
-                    window.location.reload();
-                },
-                onError: (error) => {
-                    console.error("Error:", error);
+                onSuccess: (res) => {
+                    const attachments = res.props?.task?.attachments;
+                    if (attachments.length > 0) {
+                        setAttachedFiles(attachments);
+                        setClearFileInput(true);
+                    }
                 }
             });
         } else {
@@ -306,12 +310,14 @@ export default function Create({ auth, users, clients, projects, task }) {
                                     <AttachmentsInput
                                         name="attachments"
                                         id="attachments"
-                                        loadedFiles={[...data.attachments]}
+                                        attachedFiles={attachedFiles}
+                                        setAttachedFiles={setAttachedFiles}
                                         data={data} // Pass the entire data object
                                         setData={setData}
                                         error={errors["attachments.*"]}
                                         label="Attachments"
                                         multiple={true}
+                                        clearInput={clearFileInput}
                                     />
                                 </div>
 

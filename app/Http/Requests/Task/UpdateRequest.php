@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Task;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class UpdateRequest extends FormRequest
 {
@@ -18,6 +19,7 @@ class UpdateRequest extends FormRequest
     {
         $data = $this->all();
         $data['status'] = filter_var($data['status'], FILTER_VALIDATE_BOOLEAN);
+
         return $data;
     }
 
@@ -29,6 +31,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         $task = $this->route('task');
+
         return [
             'title' => ['required', 'string', function ($attribute, $value, $fail) use ($task) {
                 if ($task && $task->title !== $value) {

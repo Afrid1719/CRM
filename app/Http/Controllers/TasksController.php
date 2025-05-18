@@ -10,6 +10,7 @@ use App\Models\AppUser;
 use App\Models\Client;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class TasksController extends Controller
@@ -72,7 +73,10 @@ class TasksController extends Controller
      */
     public function update(UpdateRequest $request, Task $task)
     {
-        $task->update($request->all());
+        $data = $request->only(['title', 'description', 'assigned_to', 'for_client', 'related_to_project']);
+        $data['status'] = filter_var($request->input('status'), FILTER_VALIDATE_BOOLEAN);
+
+        $task->update($data);
 
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {

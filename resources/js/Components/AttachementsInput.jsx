@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, startTransition, useEffect } from "react";
 import InputError from "./InputError";
 import InputLabel from "./InputLabel";
 import FileInput from "./FileInput";
@@ -12,11 +12,23 @@ export default function AttachmentsInput({
     error,
     label,
     multiple,
-    loadedFiles
+    attachedFiles,
+    setAttachedFiles,
+    clearInput = false
 }) {
-    const [fileNames, setFileNames] = useState([]);
-    const [loadedFilesState, setLoadedFilesState] = useState(loadedFiles);
+    const [fileNames, setFileNames] = useState(data[name]);
     const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        if (clearInput && fileNames) {
+            for (let i = 0; i < fileNames.length; i++) {
+                setFileNames(null);
+                setData(name, null);
+                const dt = new DataTransfer();
+                fileInputRef.current.files = dt.files;
+            }
+        }
+    }, [clearInput]);
 
     const handleChange = (e) => {
         const files = Array.from(e.target.files);
@@ -26,7 +38,7 @@ export default function AttachmentsInput({
         if (files.length > 0) {
             setFileNames(files.map((file) => file.name));
         } else {
-            setFileNames([]); // Reset if no file is selected
+            setFileNames(null); // Reset if no file is selected
         }
     };
 
@@ -44,12 +56,12 @@ export default function AttachmentsInput({
         fileInputRef.current.files = dataTransfer.files;
     };
 
-    const handleRemoveAttachment = (id) => {
+    const handleRemoveAttachedFiles = (id) => {
         router.delete(route("attachments.destroy", id), {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {
-                setLoadedFilesState((prev) =>
+                setAttachedFiles((prev) =>
                     prev.filter((file) => file.id !== id)
                 );
             },
@@ -63,9 +75,9 @@ export default function AttachmentsInput({
     return (
         <div className="flex flex-col gap-1">
             <InputLabel value={label} />
-            {loadedFilesState.length > 0 && (
+            {attachedFiles.length > 0 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-2">
-                    {loadedFilesState.map((file) => (
+                    {attachedFiles.map((file) => (
                         <div
                             key={file.id}
                             className="border p-4 rounded-md shadow-sm"
@@ -80,7 +92,9 @@ export default function AttachmentsInput({
                             </a>
                             <button
                                 type="button"
-                                onClick={() => handleRemoveAttachment(file.id)}
+                                onClick={() =>
+                                    handleRemoveAttachedFiles(file.id)
+                                }
                                 className="text-red-600 hover:underline mt-2"
                             >
                                 Remove
@@ -97,7 +111,7 @@ export default function AttachmentsInput({
                 multiple={multiple}
                 ref={fileInputRef}
             />
-            {fileNames.length > 0 && (
+            {fileNames && fileNames.length > 0 && (
                 <div className="mt-2 text-sm text-gray-600">
                     <p className="font-medium">Selected Files:</p>
                     <ul className="list-disc list-inside">
