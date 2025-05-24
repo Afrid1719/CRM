@@ -61,7 +61,7 @@ class AttachmentsController extends Controller
      */
     public function destroy(Attachment $attachment)
     {
-        $attachment->deleteOrFail();
+        $attachment->delete();
         return back()->with(['success' => "{$attachment->filename} deleted successfully."]);
     }
 }
