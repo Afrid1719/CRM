@@ -45,11 +45,21 @@ npm run dev
 php artisan migrate
 ```
 
-#### Step 6: Start the development server
+**(Optional) Seed the database with sample data for development:**
 
 ```bash
-php artisan serve
+php artisan db:seed
 ```
+
+This command populates your database using the seeders in the `database/seeders` directory. You can customize or add your own seeders as needed for testing and development.
+
+#### Step 6: Link the storage directory
+
+```bash
+php artisan storage:link
+```
+
+This command creates a symbolic link from `public/storage` to `storage/app/public`, allowing public access to user-uploaded files.
 
 ### Folder Structure
 

@@ -51,7 +51,7 @@ export default function Create({ auth, users, clients, project }) {
                                 href={route("projects.index")}
                                 className="p-2 border border:border-gray-800 dark:border-white rounded-md font-normal font-sans text-sm"
                             >
-                                SHOW ALL PROJECTS
+                                All Projects
                             </Link>
                         </div>
                         <div className="p-4">

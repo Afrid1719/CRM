@@ -42,7 +42,7 @@ export default function Create({ auth, user = null }) {
                                 href={route("users.index")}
                                 className="p-2 border border:border-gray-800 dark:border-white rounded-md font-normal font-sans text-sm"
                             >
-                                SHOW ALL USERS
+                                All Users
                             </Link>
                         </div>
                         <div className="p-4">

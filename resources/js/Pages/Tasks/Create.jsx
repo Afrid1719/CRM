@@ -69,7 +69,7 @@ export default function Create({ auth, users, clients, projects, task }) {
                                 href={route("tasks.index")}
                                 className="p-2 border border:border-gray-800 dark:border-white rounded-md font-normal font-sans text-sm"
                             >
-                                SHOW ALL TASKS
+                                All Tasks
                             </Link>
                         </div>
                         <div className="p-4">

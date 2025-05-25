@@ -55,7 +55,7 @@ export default function Index({ auth, page }) {
                                 href={route("tasks.create")}
                                 className="inline-block p-2 border border:border-gray-800 dark:border-white rounded-md font-normal font-sans text-sm"
                             >
-                                ADD TASK
+                                Add Task
                             </Link>
                         </div>
                         <div className="p-4 pt-0 px-0 overflow-auto">
