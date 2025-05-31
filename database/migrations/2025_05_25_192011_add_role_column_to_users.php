@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\Roles;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,11 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('app_users', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name', 50);
-            $table->string('email')->unique();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->tinyInteger('role')
+                ->default(Roles::USER)
+                ->after('avatar');
         });
     }
 
@@ -24,6 +24,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('app_users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('role');
+        });
     }
 };

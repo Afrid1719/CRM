@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AppUser;
+use App\Models\User;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AppUser\StoreRequest;
-use App\Http\Requests\AppUser\UpdateRequest;
+use App\Http\Requests\User\StoreRequest;
+use App\Http\Requests\User\UpdateRequest;
 use Inertia\Inertia;
 
-class AppUsersController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('AppUsers/Index', [
-            'page' => AppUser::query()->paginate(10)
+        return Inertia::render('Users/Index', [
+            'page' => User::query()->paginate(10)
         ]);
     }
 
@@ -25,7 +25,7 @@ class AppUsersController extends Controller
      */
     public function create()
     {
-        return Inertia::render('AppUsers/Create');
+        return Inertia::render('Users/Create');
     }
 
     /**
@@ -33,7 +33,7 @@ class AppUsersController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $user = new AppUser($request->all());
+        $user = new User($request->all());
         $user->save();
         return redirect('users');
     }
@@ -41,7 +41,7 @@ class AppUsersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(AppUser $user)
+    public function show(User $user)
     {
         //
     }
@@ -49,9 +49,9 @@ class AppUsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(AppUser $user)
+    public function edit(User $user)
     {
-        return Inertia::render('AppUsers/Create', [
+        return Inertia::render('Users/Create', [
             'user' => $user
         ]);
     }
@@ -59,10 +59,10 @@ class AppUsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, AppUser $user)
+    public function update(UpdateRequest $request, User $user)
     {
         $user->update($request->all());
-        return Inertia::render('AppUsers/Create', [
+        return Inertia::render('Users/Create', [
             'user' => $user
         ]);
     }
@@ -70,7 +70,7 @@ class AppUsersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AppUser $user)
+    public function destroy(User $user)
     {
         $user->deleteOrFail();
         return response()->noContent();

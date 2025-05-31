@@ -4,7 +4,7 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\TasksController;
-use App\Http\Controllers\AppUsersController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AttachmentsController;
 use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
@@ -26,7 +26,7 @@ Route::redirect('/', '/dashboard')->middleware(['auth']);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/protected', function () {});
@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('tasks/{task}', [TasksController::class, 'update'])->name('tasks.update');
     Route::resources([
-        'users' => AppUsersController::class,
+        'users' => UsersController::class,
         'projects' => ProjectsController::class,
         'tasks' => TasksController::class,
         'clients' => ClientsController::class
