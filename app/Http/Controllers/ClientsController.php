@@ -19,21 +19,25 @@ class ClientsController extends Controller
     {
         $query = Client::query();
 
-        if ($search = $request->input('search')) {
+        $search = $request->input('search');
+        if ($search) {
             $query->where('name', 'like', "%{$search}%");
         }
 
-        if ($activeQuery = $request->input('active')) {
-            if ($activeQuery == 'active') {
-                $query->active();
-            } elseif ($activeQuery == 'inactive') {
-                $query->inactive();
-            }
+        $activeQuery = $request->input('active');
+
+        if ($activeQuery == 'active' || $activeQuery == '') {
+            $query->active();
+        } elseif ($activeQuery == 'inactive') {
+            $query->inactive();
         }
 
         return Inertia::render('Clients/Index', [
             'page' => $query->paginate(10)->withQueryString(),
-            'filters' => $request->only('search', 'active')
+            'filters' => [
+                'search' => $request->input('search', ''),
+                'active' => $request->input('active', 'active'),
+            ],
         ]);
     }
 

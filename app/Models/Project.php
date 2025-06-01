@@ -51,7 +51,7 @@ class Project extends Model
 
     public function user()
     {
-        return $this->belongsTo(AppUser::class, 'assigned_user');
+        return $this->belongsTo(User::class, 'assigned_user');
     }
 
     public function tasks()

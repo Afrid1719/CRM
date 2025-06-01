@@ -11,9 +11,9 @@ class Roles
     static function all()
     {
         return [
-            self::ADMIN,
-            self::USER,
-            self::GUEST,
+            self::ADMIN => 'Admin',
+            self::USER => 'User',
+            self::GUEST => 'Guest',
         ];
     }
 }

@@ -32,7 +32,7 @@ class StoreRequest extends FormRequest
             'title' => ['required', 'string', 'max:70', 'unique:App\Models\Task'],
             'description' => ['required', 'string', 'max:250'],
             'status' => ['nullable', 'boolean'],
-            'assigned_to' => ['required', 'string', 'exists:App\Models\AppUser,id'],
+            'assigned_to' => ['required', 'string', 'exists:App\Models\User,id'],
             'for_client' => ['required', 'string', 'exists:App\Models\Client,id'],
             'related_to_project' => ['required', 'string', 'exists:App\Models\Project,id'],
             'attachments.*' => [

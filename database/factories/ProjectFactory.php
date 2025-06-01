@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\AppUser;
+use App\Models\User;
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +22,7 @@ class ProjectFactory extends Factory
             'title' => fake()->words(3, true),
             'description' => fake()->sentence(10),
             'deadline' => fake()->date('Y-m-d'),
-            'assigned_user' => AppUser::query()->pluck('id')->random(),
+            'assigned_user' => User::query()->pluck('id')->random(),
             'assigned_client' => Client::query()->pluck('id')->random(),
             'status' => fake()->randomElement(['Open', 'In progress', 'Completed']),
         ];

@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import axios from "axios";
 import Pagination from "@/Components/Pagination";
@@ -34,7 +34,7 @@ export default function Index({ auth, page }) {
             <Head title="Projects" />
 
             <div className="py-12">
-                <div className="max-w-8xl mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                     <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm sm:rounded-lg">
                         <div className="w-full flex justify-end p-3">
                             <Link

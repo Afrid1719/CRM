@@ -36,7 +36,7 @@ class Task extends Model
 
     public function user()
     {
-        return $this->belongsTo(AppUser::class, 'assigned_to');
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 
     public function client()

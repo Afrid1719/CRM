@@ -61,7 +61,7 @@ export default function Create({ auth, users, clients, projects, task }) {
             )}
 
             <div className="py-12">
-                <div className="max-w-8xl mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                     <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm sm:rounded-lg">
                         <div className="w-full flex justify-end p-3">
                             <Link
@@ -109,7 +109,7 @@ export default function Create({ auth, users, clients, projects, task }) {
                                 onSubmit={submit}
                                 encType="multipart/form-data"
                             >
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex flex-col gap-4">
                                     <div>
                                         <InputLabel
                                             htmlFor="title"

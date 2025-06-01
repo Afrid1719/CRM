@@ -40,7 +40,7 @@ class UpdateRequest extends FormRequest
             }],
             'description' => ['nullable', 'string', 'max:250'],
             'status' => ['nullable', 'boolean'],
-            'assinged_to' => ['nullable', 'string', 'exists:App\Models\AppUser,id'],
+            'assinged_to' => ['nullable', 'string', 'exists:App\Models\User,id'],
             'for_client' => ['nullable', 'string', 'exists:App\Models\Client,id'],
             'related_to_project' => ['nullable', 'string', 'exists:App\Models\Project,id'],
             'attachments.*' => [

@@ -30,7 +30,7 @@ class UpdateRequest extends FormRequest
             }],
             'description' => ['required', 'string', 'max:250'],
             'deadline' => ['nullable', 'date'],
-            'assigned_user' => ['required', 'string', 'exists:App\Models\AppUser,id'],
+            'assigned_user' => ['required', 'string', 'exists:App\Models\User,id'],
             'assigned_client' => ['required', 'string', 'exists:App\Models\Client,id'],
             'status' => ['required', 'string', 'in:Open,In progress,Completed'],
         ];

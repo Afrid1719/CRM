@@ -6,7 +6,7 @@ use App\Models\Project;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\StoreRequest;
 use App\Http\Requests\Project\UpdateRequest;
-use App\Models\AppUser;
+use App\Models\User;
 use App\Models\Client;
 use Inertia\Inertia;
 
@@ -29,7 +29,7 @@ class ProjectsController extends Controller
     public function create()
     {
         return Inertia::render('Projects/Create', [
-            'users' => AppUser::select('id', 'name')->get(),
+            'users' => User::select('id', 'name')->get(),
             'clients' => Client::select('id', 'name')->get()
         ]);
     }
@@ -58,7 +58,7 @@ class ProjectsController extends Controller
     public function edit(Project $project)
     {
         return Inertia::render('Projects/Create', [
-            'users' => AppUser::select('id', 'name')->get(),
+            'users' => User::select('id', 'name')->get(),
             'clients' => Client::select('id', 'name')->get(),
             'project' => $project,
         ]);
@@ -71,7 +71,7 @@ class ProjectsController extends Controller
     {
         $project->update($request->all());
         return Inertia::render('Projects/Create', [
-            'users' => AppUser::select('id', 'name')->get(),
+            'users' => User::select('id', 'name')->get(),
             'clients' => Client::select('id', 'name')->get(),
             'project' => $project,
         ]);

@@ -23,7 +23,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'email', 'unique:App\Models\AppUser'],
+            'email' => ['required', 'email', 'unique:App\Models\User'],
             'avatar' => ['nullable', 'url:https']
         ];
     }

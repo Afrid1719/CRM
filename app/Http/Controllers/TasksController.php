@@ -6,7 +6,7 @@ use App\Models\Task;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Task\StoreRequest;
 use App\Http\Requests\Task\UpdateRequest;
-use App\Models\AppUser;
+use App\Models\User;
 use App\Models\Client;
 use App\Models\Project;
 use Illuminate\Http\Request;
@@ -31,7 +31,7 @@ class TasksController extends Controller
     public function create()
     {
         return Inertia::render('Tasks/Create', [
-            'users' => AppUser::select('id', 'name')->get(),
+            'users' => User::select('id', 'name')->get(),
             'clients' => Client::select('id', 'name')->get(),
             'projects' => Project::select('id', 'title')->get(),
         ]);
@@ -61,7 +61,7 @@ class TasksController extends Controller
     public function edit(Task $task)
     {
         return Inertia::render('Tasks/Create', [
-            'users' => AppUser::select('id', 'name')->get(),
+            'users' => User::select('id', 'name')->get(),
             'clients' => Client::select('id', 'name')->get(),
             'projects' => Project::select('id', 'title')->get(),
             'task' => $task->load('attachments'),
@@ -91,7 +91,7 @@ class TasksController extends Controller
         }
 
         return Inertia::render("Tasks/Create", [
-            'users' => AppUser::select('id', 'name')->get(),
+            'users' => User::select('id', 'name')->get(),
             'clients' => Client::select('id', 'name')->get(),
             'projects' => Project::select('id', 'title')->get(),
             'task' => $task->load('attachments'),

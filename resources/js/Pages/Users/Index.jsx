@@ -1,9 +1,12 @@
 import Pagination from "@/Components/Pagination";
+import { useRoles } from "@/Context/RolesContext";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import axios from "axios";
 
 export default function Index({ auth, page }) {
+    const roles = useRoles();
+
     const deleteUser = (id) => {
         if (confirm("Are you sure you want to delete this user?")) {
             axios
@@ -30,7 +33,7 @@ export default function Index({ auth, page }) {
             <Head title="Users" />
 
             <div className="py-12">
-                <div className="max-w-8xl mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                     <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm sm:rounded-lg">
                         <div className="w-full flex justify-end p-3">
                             <Link
@@ -57,6 +60,11 @@ export default function Index({ auth, page }) {
                                         <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                                             <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
                                                 Email
+                                            </p>
+                                        </th>
+                                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                                            <p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+                                                Role
                                             </p>
                                         </th>
                                         <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50 ">
@@ -97,6 +105,14 @@ export default function Index({ auth, page }) {
                                                 <div className="flex items-center gap-3">
                                                     <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
                                                         {user.email}
+                                                    </p>
+                                                </div>
+                                            </td>
+
+                                            <td className="p-4 border-b border-blue-gray-50">
+                                                <div className="flex items-center gap-3">
+                                                    <p className="block antialiased font-sans italic text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
+                                                        {roles[user.role]}
                                                     </p>
                                                 </div>
                                             </td>
