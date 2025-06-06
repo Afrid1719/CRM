@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::put('tasks/{task}/update-status', [TasksController::class, 'updateStatus'])->name('tasks.update-status');
     Route::put('clients/{client}/activation', [ClientsController::class, 'activation'])->name('clients.activation');
     Route::delete('attachments/{attachment}', [AttachmentsController::class, 'destroy'])->name('attachments.destroy');
+
+    Route::put('users/{user}/permissions', [UsersController::class, 'updatePermissions'])->name('users.permissions.update');
 });
 
 // This is only for testing purpose, it can be removed later

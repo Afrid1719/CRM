@@ -107,4 +107,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Task::class, 'assigned_user');
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === Roles::ADMIN;
+    }
+
+    public function permissions()
+    {
+        return $this->hasMany(Permission::class);
+    }
 }

@@ -4,8 +4,9 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
+import Permissions from "@/Components/Permissions";
 
-export default function Create({ auth, user = null }) {
+export default function Create({ auth, permissions, actions, user = null }) {
     const { data, setData, post, put, processing, errors, wasSuccessful } =
         useForm({
             avatar: user?.avatar || "",
@@ -34,7 +35,7 @@ export default function Create({ auth, user = null }) {
             {user ? <Head title="Edit User" /> : <Head title="Create User" />}
 
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 flex flex-col gap-4">
                     <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm sm:rounded-lg">
                         <div className="w-full flex justify-end p-3">
                             <Link
@@ -158,6 +159,11 @@ export default function Create({ auth, user = null }) {
                             </form>
                         </div>
                     </div>
+                    <Permissions
+                        permissions={permissions}
+                        actions={actions}
+                        user={user}
+                    />
                 </div>
             </div>
         </AuthenticatedLayout>

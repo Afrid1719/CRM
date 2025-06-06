@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title', 120);
             $table->string('description', 250);
             $table->date('deadline')->default(DB::raw('CURRENT_DATE'));
-            $table->foreignUuid('assigned_user')->references('id')->on('app_users')->onDelete('cascade');
+            $table->foreignUuid('assigned_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreignUuid('assigned_client')->references('id')->on('clients')->onDelete('cascade');
             $table->enum('status', ['Open', 'In progress', 'Completed'])->default('Open');
             $table->timestamps();

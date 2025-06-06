@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title', 70)->unique();
             $table->string('description', 250);
             $table->boolean('status')->default(false);
-            $table->foreignUuid('assigned_to')->references('id')->on('app_users')->onDelete('cascade');
+            $table->foreignUuid('assigned_to')->references('id')->on('users')->onDelete('cascade');
             $table->foreignUuid('for_client')->references('id')->on('clients')->onDelete('cascade');
             $table->foreignId('related_to_project')->constrained('projects')->onDelete('cascade');
             $table->softDeletes();
