@@ -110,17 +110,23 @@ const Permissions = ({ permissions, actions, user }) => {
                                     <td className="px-4 py-2 border-b">
                                         {r.name}
                                     </td>
-                                    {Object.entries(r.permissions).map(
-                                        ([action, value]) => (
-                                            <td
-                                                key={`${action}-cell-${r.id}`}
-                                                className="px-4 py-2 border-b"
-                                            >
+                                    {Object.keys(actions).map((action) => (
+                                        <td
+                                            key={`${action}-cell-${r.id}`}
+                                            className="px-4 py-2 border-b"
+                                        >
+                                            {r.permissions.hasOwnProperty(
+                                                action
+                                            ) ? (
                                                 <div className="inline-flex items-center align-middle">
                                                     <label className="flex items-center cursor-pointer relative">
                                                         <input
                                                             type="checkbox"
-                                                            checked={value}
+                                                            checked={
+                                                                r.permissions[
+                                                                    action
+                                                                ]
+                                                            }
                                                             onChange={(e) =>
                                                                 handlePermissionChange(
                                                                     e,
@@ -149,9 +155,11 @@ const Permissions = ({ permissions, actions, user }) => {
                                                         </span>
                                                     </label>
                                                 </div>
-                                            </td>
-                                        )
-                                    )}
+                                            ) : (
+                                                <span>&nbsp;</span>
+                                            )}
+                                        </td>
+                                    ))}
                                 </tr>
                             ))}
                         </tbody>

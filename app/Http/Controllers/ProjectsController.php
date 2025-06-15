@@ -8,6 +8,7 @@ use App\Http\Requests\Project\StoreRequest;
 use App\Http\Requests\Project\UpdateRequest;
 use App\Models\User;
 use App\Models\Client;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProjectsController extends Controller
@@ -16,8 +17,12 @@ class ProjectsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->user()->cannot('viewAny', Project::class)) {
+            abort(403, "Unauthorized action.");
+        }
+
         return Inertia::render('Projects/Index', [
             'page' => Project::with('client', 'user')->paginate(10),
         ]);
@@ -26,8 +31,12 @@ class ProjectsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', Project::class)) {
+            abort(403, "Unauthorized action.");
+        }
+
         return Inertia::render('Projects/Create', [
             'users' => User::select('id', 'name')->get(),
             'clients' => Client::select('id', 'name')->get()
@@ -39,6 +48,10 @@ class ProjectsController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', Project::class)) {
+            abort(403, "Unauthorized action.");
+        }
+
         $project = new Project($request->all());
         $project->save();
         return redirect('projects');
@@ -57,6 +70,10 @@ class ProjectsController extends Controller
      */
     public function edit(Project $project)
     {
+        if (auth()->user()->cannot('update', $project)) {
+            abort(403, "Unauthorized action.");
+        }
+
         return Inertia::render('Projects/Create', [
             'users' => User::select('id', 'name')->get(),
             'clients' => Client::select('id', 'name')->get(),
@@ -69,6 +86,10 @@ class ProjectsController extends Controller
      */
     public function update(UpdateRequest $request, Project $project)
     {
+        if (auth()->user()->cannot('update', $project)) {
+            abort(403, "Unauthorized action.");
+        }
+
         $project->update($request->all());
         return Inertia::render('Projects/Create', [
             'users' => User::select('id', 'name')->get(),
@@ -82,6 +103,10 @@ class ProjectsController extends Controller
      */
     public function destroy(Project $project)
     {
+        if (auth()->user()->cannot('delete', $project)) {
+            abort(403, "Unauthorized action.");
+        }
+
         $project->deleteOrFail();
         return Inertia::render('Projects/Index');
     }

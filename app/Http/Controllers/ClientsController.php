@@ -17,6 +17,10 @@ class ClientsController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('viewAny', Client::class)) {
+            abort(403, "You do not have permission to view clients.");
+        }
+
         $query = Client::query();
 
         $search = $request->input('search');
@@ -44,8 +48,12 @@ class ClientsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', Client::class)) {
+            abort(403, "You do not have permission to create clients.");
+        }
+
         return Inertia::render('Clients/Create');
     }
 
@@ -54,6 +62,10 @@ class ClientsController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', Client::class)) {
+            abort(403, "Unauthorized action.");
+        }
+
         $client = new Client($request->all());
         $client->save();
         return redirect('clients');
@@ -62,16 +74,22 @@ class ClientsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Client $client)
+    public function show(Request $request, Client $client)
     {
-        //
+        if ($request->user()->cannot('view', $client)) {
+            abort(403, "You do not have permission to view this client.");
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Client $client)
+    public function edit(Request $request, Client $client)
     {
+        if ($request->user()->cannot('edit', $client)) {
+            abort(403, "You do not have permission to edit this client.");
+        }
+
         return Inertia::render('Clients/Create', [
             'client' => $client,
         ]);
@@ -82,6 +100,10 @@ class ClientsController extends Controller
      */
     public function update(UpdateRequest $request, Client $client)
     {
+        if ($request->user()->cannot('edit', $client)) {
+            abort(403, "Unauthorized action.");
+        }
+
         $client->update($request->all());
         return Inertia::render('Clients/Create', [
             'client' => $client,
@@ -91,14 +113,22 @@ class ClientsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Client $client)
+    public function destroy(Request $request, Client $client)
     {
+        if ($request->user()->cannot('delete', $client)) {
+            abort(403, "Unauthorized action.");
+        }
+
         $client->deleteOrFail();
         return Inertia::render('Clients/Index');
     }
 
     public function activation(ClientActivationRequest $request, Client $client)
     {
+        if ($request->user()->cannot('edit', $client)) {
+            abort(403, "Unauthorized action.");
+        }
+
         $client->is_active = $request->isActive;
         $client->save(); // $client->update(['is_active' => $request->isActive]) did not work
         return Inertia::render('Clients/Index');

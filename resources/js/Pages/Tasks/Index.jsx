@@ -3,22 +3,34 @@ import { Head, Link } from "@inertiajs/react";
 import { useState } from "react";
 import axios from "axios";
 import Pagination from "@/Components/Pagination";
+import useAsyncNotifier from "@/hooks/useAsyncNotifier";
+import Modal from "@/Components/Modal";
+import SecondaryButton from "@/Components/SecondaryButton";
+import DangerButton from "@/Components/DangerButton";
 
 export default function Index({ auth, page }) {
     const [isDeleting, setIsDeleting] = useState(false);
-    const deleteTask = (id) => {
-        setIsDeleting(true);
-        if (confirm("Are you sure you want to delete this project?")) {
-            axios
-                .request({
+    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+    const notify = useAsyncNotifier();
+
+    const deleteTask = async (id) => {
+        setIsDeletePopupOpen(false);
+        try {
+            setIsDeleting(true);
+            await notify(
+                axios.request({
                     url: route("tasks.destroy", { task: id }),
                     method: "DELETE"
-                })
-                .then(() => {
-                    location.reload();
-                })
-                .catch((err) => console.error(err.message));
-        } else {
+                }),
+                {
+                    pendingMessage: "Deleting task...",
+                    successMessage: "Task deleted successfully!"
+                }
+            );
+            location.reload();
+        } catch (error) {
+            console.error(error.message);
+        } finally {
             setIsDeleting(false);
         }
     };
@@ -154,7 +166,8 @@ export default function Index({ auth, page }) {
                                             <td className="p-4 border-b border-blue-gray-50">
                                                 <div className="flex items-center gap-3">
                                                     <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
-                                                        {task.user.name}
+                                                        {task.user?.name ||
+                                                            "Unassigned"}
                                                     </p>
                                                 </div>
                                             </td>
@@ -162,7 +175,8 @@ export default function Index({ auth, page }) {
                                             <td className="p-4 border-b border-blue-gray-50">
                                                 <div className="flex items-center gap-3">
                                                     <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
-                                                        {task.client.name}
+                                                        {task.client?.name ||
+                                                            "Unassigned"}
                                                     </p>
                                                 </div>
                                             </td>
@@ -170,7 +184,8 @@ export default function Index({ auth, page }) {
                                             <td className="p-4 border-b border-blue-gray-50">
                                                 <div className="flex items-center gap-3">
                                                     <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
-                                                        {task.project.title}
+                                                        {task.project?.title ||
+                                                            "Unassigned"}
                                                     </p>
                                                 </div>
                                             </td>
@@ -227,7 +242,9 @@ export default function Index({ auth, page }) {
                                                     className="relative align-middle select-none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
                                                     type="button"
                                                     onClick={() =>
-                                                        deleteTask(task.id)
+                                                        setIsDeletePopupOpen(
+                                                            true
+                                                        )
                                                     }
                                                     disabled={isDeleting}
                                                 >
@@ -246,6 +263,54 @@ export default function Index({ auth, page }) {
                                                         </svg>
                                                     </span>
                                                 </button>
+                                                <Modal
+                                                    show={isDeletePopupOpen}
+                                                    onClose={() =>
+                                                        setIsDeletePopupOpen(
+                                                            false
+                                                        )
+                                                    }
+                                                    maxWidth="md"
+                                                >
+                                                    <div className="w-full transform overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all">
+                                                        <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+                                                            Are you sure you
+                                                            want to delete this
+                                                            task?
+                                                        </h3>
+                                                        <div className="mt-2">
+                                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                                This action
+                                                                cannot be
+                                                                undone. Please
+                                                                confirm that you
+                                                                want to delete
+                                                                the task.
+                                                            </p>
+                                                        </div>
+
+                                                        <div className="mt-4 flex justify-end gap-4">
+                                                            <SecondaryButton
+                                                                onClick={() =>
+                                                                    setIsDeletePopupOpen(
+                                                                        false
+                                                                    )
+                                                                }
+                                                            >
+                                                                Cancel
+                                                            </SecondaryButton>
+                                                            <DangerButton
+                                                                onClick={() =>
+                                                                    deleteTask(
+                                                                        task.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </DangerButton>
+                                                        </div>
+                                                    </div>
+                                                </Modal>
                                             </td>
                                         </tr>
                                     ))}

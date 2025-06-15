@@ -19,6 +19,9 @@ class UsersController extends Controller
      */
     public function index(HttpRequest $request)
     {
+        if ($request->user()->cannot('viewAny', User::class)) {
+            abort(403);
+        }
 
         return Inertia::render('Users/Index', [
             'page' => User::query()->paginate(10),
@@ -30,6 +33,10 @@ class UsersController extends Controller
      */
     public function create(HttpRequest $request)
     {
+        if ($request->user()->cannot('create', User::class)) {
+            abort(403);
+        }
+
         return Inertia::render('Users/Create');
     }
 
@@ -38,6 +45,10 @@ class UsersController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', User::class)) {
+            abort(403);
+        }
+
         $user = new User($request->all());
         $user->save();
         return redirect('users');
@@ -57,7 +68,7 @@ class UsersController extends Controller
     public function edit(HttpRequest $request, User $user)
     {
         if ($request->user()->cannot('edit', $user)) {
-            abort(404);
+            abort(403);
         }
 
         $actions = ResourceAction::all()->unique('name')->pluck('id', 'name')->toArray();
@@ -97,6 +108,10 @@ class UsersController extends Controller
      */
     public function update(UpdateRequest $request, User $user)
     {
+        if ($request->user()->cannot('edit', $user)) {
+            abort(403);
+        }
+
         $user->update($request->all());
         return Inertia::render('Users/Create', [
             'user' => $user
@@ -106,8 +121,12 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(HttpRequest $request, User $user)
     {
+        if ($request->user()->cannot('delete', $user)) {
+            abort(403, 'Unauthorized action');
+        }
+
         $user->deleteOrFail();
         return response()->noContent();
     }

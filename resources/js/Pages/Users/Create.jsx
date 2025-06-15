@@ -80,73 +80,84 @@ export default function Create({ auth, permissions, actions, user = null }) {
                                 </div>
                             </div>
                             <form onSubmit={submit}>
-                                <div>
-                                    <InputLabel htmlFor="name" value="Name" />
+                                <section className="max-w-xl">
+                                    <div>
+                                        <InputLabel
+                                            htmlFor="name"
+                                            value="Name"
+                                        />
 
-                                    <TextInput
-                                        id="name"
-                                        name="name"
-                                        value={data.name}
-                                        className="mt-1 block w-full"
-                                        autoComplete="name"
-                                        isFocused={true}
-                                        onChange={(e) => {
-                                            setData("name", e.target.value);
-                                        }}
-                                        required
-                                    />
+                                        <TextInput
+                                            id="name"
+                                            name="name"
+                                            value={data.name}
+                                            className="mt-1 block w-full"
+                                            autoComplete="name"
+                                            isFocused={true}
+                                            onChange={(e) => {
+                                                setData("name", e.target.value);
+                                            }}
+                                            required
+                                        />
 
-                                    <InputError
-                                        message={errors.name}
-                                        className="mt-2"
-                                    />
-                                </div>
+                                        <InputError
+                                            message={errors.name}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                <div className="mt-4">
-                                    <InputLabel htmlFor="email" value="Email" />
+                                    <div className="mt-4">
+                                        <InputLabel
+                                            htmlFor="email"
+                                            value="Email"
+                                        />
 
-                                    <TextInput
-                                        id="email"
-                                        name="email"
-                                        type="email"
-                                        value={data.email}
-                                        className="mt-1 block w-full disabled:opacity-50"
-                                        autoComplete="email"
-                                        onChange={(e) =>
-                                            setData("email", e.target.value)
-                                        }
-                                        required
-                                        disabled={!!user}
-                                    />
+                                        <TextInput
+                                            id="email"
+                                            name="email"
+                                            type="email"
+                                            value={data.email}
+                                            className="mt-1 block w-full disabled:opacity-50"
+                                            autoComplete="email"
+                                            onChange={(e) =>
+                                                setData("email", e.target.value)
+                                            }
+                                            required
+                                            disabled={!!user}
+                                        />
 
-                                    <InputError
-                                        message={errors.email}
-                                        className="mt-2"
-                                    />
-                                </div>
+                                        <InputError
+                                            message={errors.email}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                <div className="mt-4">
-                                    <InputLabel
-                                        htmlFor="avatar"
-                                        value="Avatar Url"
-                                    />
+                                    <div className="mt-4">
+                                        <InputLabel
+                                            htmlFor="avatar"
+                                            value="Avatar Url"
+                                        />
 
-                                    <TextInput
-                                        id="avatar"
-                                        type="url"
-                                        name="avatar"
-                                        value={data.avatar}
-                                        className="mt-1 block w-full"
-                                        onChange={(e) =>
-                                            setData("avatar", e.target.value)
-                                        }
-                                    />
+                                        <TextInput
+                                            id="avatar"
+                                            type="url"
+                                            name="avatar"
+                                            value={data.avatar}
+                                            className="mt-1 block w-full"
+                                            onChange={(e) =>
+                                                setData(
+                                                    "avatar",
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
 
-                                    <InputError
-                                        message={errors.avatar}
-                                        className="mt-2"
-                                    />
-                                </div>
+                                        <InputError
+                                            message={errors.avatar}
+                                            className="mt-2"
+                                        />
+                                    </div>
+                                </section>
 
                                 <div className="flex items-center justify-end mt-4">
                                     <PrimaryButton

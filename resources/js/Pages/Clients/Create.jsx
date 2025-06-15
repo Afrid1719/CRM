@@ -86,111 +86,121 @@ export default function Create({ auth, client = null }) {
                                 </div>
                             </div>
                             <form onSubmit={submit}>
-                                <div>
-                                    <InputLabel htmlFor="name" value="Name" />
+                                <section className="max-w-xl">
+                                    <div>
+                                        <InputLabel
+                                            htmlFor="name"
+                                            value="Name"
+                                        />
 
-                                    <TextInput
-                                        id="name"
-                                        name="name"
-                                        value={data.name}
-                                        className="mt-1 block w-full"
-                                        autoComplete="name"
-                                        isFocused={true}
-                                        onChange={(e) => {
-                                            setData("name", e.target.value);
-                                        }}
-                                        required
-                                    />
+                                        <TextInput
+                                            id="name"
+                                            name="name"
+                                            value={data.name}
+                                            className="mt-1 block w-full"
+                                            autoComplete="name"
+                                            isFocused={true}
+                                            onChange={(e) => {
+                                                setData("name", e.target.value);
+                                            }}
+                                            required
+                                        />
 
-                                    <InputError
-                                        message={errors.name}
-                                        className="mt-2"
-                                    />
-                                </div>
+                                        <InputError
+                                            message={errors.name}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                <div className="mt-4">
-                                    <InputLabel htmlFor="email" value="Email" />
+                                    <div className="mt-4">
+                                        <InputLabel
+                                            htmlFor="email"
+                                            value="Email"
+                                        />
 
-                                    <TextInput
-                                        id="email"
-                                        name="email"
-                                        type="email"
-                                        value={data.email}
-                                        className="mt-1 block w-full disabled:opacity-50"
-                                        autoComplete="email"
-                                        onChange={(e) =>
-                                            setData("email", e.target.value)
-                                        }
-                                        required
-                                        disabled={!!client}
-                                    />
+                                        <TextInput
+                                            id="email"
+                                            name="email"
+                                            type="email"
+                                            value={data.email}
+                                            className="mt-1 block w-full disabled:opacity-50"
+                                            autoComplete="email"
+                                            onChange={(e) =>
+                                                setData("email", e.target.value)
+                                            }
+                                            required
+                                            disabled={!!client}
+                                        />
 
-                                    <InputError
-                                        message={errors.email}
-                                        className="mt-2"
-                                    />
-                                </div>
+                                        <InputError
+                                            message={errors.email}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                <div className="mt-4">
-                                    <InputLabel htmlFor="vat" value="VAT" />
+                                    <div className="mt-4">
+                                        <InputLabel htmlFor="vat" value="VAT" />
 
-                                    <TextInput
-                                        id="vat"
-                                        name="vat"
-                                        type="number"
-                                        max="999999"
-                                        value={data.vat}
-                                        className="mt-1 block w-full disabled:opacity-50"
-                                        autoComplete="vat"
-                                        onChange={(e) =>
-                                            setData("vat", e.target.value)
-                                        }
-                                        required
-                                    />
+                                        <TextInput
+                                            id="vat"
+                                            name="vat"
+                                            type="number"
+                                            max="999999"
+                                            value={data.vat}
+                                            className="mt-1 block w-full disabled:opacity-50"
+                                            autoComplete="vat"
+                                            onChange={(e) =>
+                                                setData("vat", e.target.value)
+                                            }
+                                            required
+                                        />
 
-                                    <InputError
-                                        message={errors.vat}
-                                        className="mt-2"
-                                    />
-                                </div>
+                                        <InputError
+                                            message={errors.vat}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                <div className="mt-4">
-                                    <InputLabel
-                                        htmlFor="address"
-                                        value="Address"
-                                    />
+                                    <div className="mt-4">
+                                        <InputLabel
+                                            htmlFor="address"
+                                            value="Address"
+                                        />
 
-                                    <TextInput
-                                        id="address"
-                                        type="text"
-                                        name="address"
-                                        value={data.address}
-                                        className="mt-1 block w-full"
-                                        onChange={(e) =>
-                                            setData("address", e.target.value)
-                                        }
-                                    />
+                                        <TextInput
+                                            id="address"
+                                            type="text"
+                                            name="address"
+                                            value={data.address}
+                                            className="mt-1 block w-full"
+                                            onChange={(e) =>
+                                                setData(
+                                                    "address",
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
 
-                                    <InputError
-                                        message={errors.address}
-                                        className="mt-2"
-                                    />
-                                </div>
+                                        <InputError
+                                            message={errors.address}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                <div className="flex flex-row items-center mt-4">
-                                    <Checkbox
-                                        value={data.isActive}
-                                        id="isActive"
-                                        name="isActive"
-                                        className="mr-2 w-8 h-8 cursor-pointer"
-                                    />
-                                    <InputLabel
-                                        htmlFor="isActive"
-                                        value="Active"
-                                        className="cursor-pointer"
-                                    />
-                                </div>
-
+                                    <div className="flex flex-row items-center mt-4">
+                                        <Checkbox
+                                            value={data.isActive}
+                                            id="isActive"
+                                            name="isActive"
+                                            className="mr-2 w-8 h-8 cursor-pointer"
+                                        />
+                                        <InputLabel
+                                            htmlFor="isActive"
+                                            value="Active"
+                                            className="cursor-pointer"
+                                        />
+                                    </div>
+                                </section>
                                 <div className="flex items-center justify-end mt-4">
                                     <PrimaryButton
                                         className="ms-4"

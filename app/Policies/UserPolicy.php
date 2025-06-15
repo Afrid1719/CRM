@@ -3,51 +3,32 @@
 namespace App\Policies;
 
 use App\Support\PermissionHelpers;
-use Illuminate\Auth\Access\Response;
 use App\Models\User;
 
 class UserPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Determine whether the user can view all the model on index page.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $currentUser): bool
     {
-        return true;
-    }
-
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, User $model): bool
-    {
-        return true;
+        return $currentUser->isAdmin() || PermissionHelpers::hasPermission($currentUser, 'view', 'Users');
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $currentUser): bool
     {
-        return $user->isAdmin();
+        return $currentUser->isAdmin() || PermissionHelpers::hasPermission($currentUser, 'create', 'Users');
     }
 
     /**
      * Determine whether the user can edit models.
      */
-    public function edit(User $currentUser, User $model): bool|Response
+    public function edit(User $currentUser, User $model): bool
     {
-        $permission = $currentUser->permissions()
-            ->where('resource_id', function ($query) {
-                $query->select('id')
-                    ->from('resources')
-                    ->where('name', 'Users');
-            })
-            ->pluck('value');
-
-        $permission = $permission->first();
-
-        return $currentUser->isAdmin() || PermissionHelpers::hasPermission($permission, 'edit');
+        return $currentUser->isAdmin() || PermissionHelpers::hasPermission($currentUser, 'edit', 'Users');
     }
 
     /**
@@ -55,7 +36,7 @@ class UserPolicy
      */
     public function update(User $currentUser, User $model): bool
     {
-        return $currentUser->isAdmin();
+        return $currentUser->isAdmin() || PermissionHelpers::hasPermission($currentUser, 'edit', 'Users');
     }
 
     /**
@@ -63,7 +44,7 @@ class UserPolicy
      */
     public function delete(User $currentUser, User $model): bool
     {
-        return $currentUser->isAdmin();
+        return $currentUser->isAdmin() || PermissionHelpers::hasPermission($currentUser, 'delete', 'Users');
     }
 
     /**

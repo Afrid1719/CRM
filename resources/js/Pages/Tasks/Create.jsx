@@ -109,218 +109,226 @@ export default function Create({ auth, users, clients, projects, task }) {
                                 onSubmit={submit}
                                 encType="multipart/form-data"
                             >
-                                <div className="flex flex-col gap-4">
-                                    <div>
-                                        <InputLabel
-                                            htmlFor="title"
-                                            value="Title"
-                                        />
+                                <section className="max-w-xl">
+                                    <div className="flex flex-col gap-4">
+                                        <div>
+                                            <InputLabel
+                                                htmlFor="title"
+                                                value="Title"
+                                            />
 
-                                        <TextInput
-                                            id="title"
-                                            name="title"
-                                            value={data.title}
-                                            className="mt-1 block w-full"
-                                            autoComplete="title"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData("title", e.target.value)
-                                            }
-                                            required
-                                        />
+                                            <TextInput
+                                                id="title"
+                                                name="title"
+                                                value={data.title}
+                                                className="mt-1 block w-full"
+                                                autoComplete="title"
+                                                isFocused={true}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "title",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                required
+                                            />
 
-                                        <InputError
-                                            message={errors.title}
-                                            className="mt-2"
-                                        />
-                                    </div>
+                                            <InputError
+                                                message={errors.title}
+                                                className="mt-2"
+                                            />
+                                        </div>
 
-                                    <div>
-                                        <InputLabel
-                                            htmlFor="description"
-                                            value="Description"
-                                        />
+                                        <div>
+                                            <InputLabel
+                                                htmlFor="description"
+                                                value="Description"
+                                            />
 
-                                        <TextArea
-                                            id="description"
-                                            name="description"
-                                            value={data.description}
-                                            className="mt-1 block w-full"
-                                            autoComplete="description"
-                                            onChange={(e) =>
-                                                setData(
-                                                    "description",
-                                                    e.target.value
-                                                )
-                                            }
-                                            required
-                                        />
+                                            <TextArea
+                                                id="description"
+                                                name="description"
+                                                value={data.description}
+                                                className="mt-1 block w-full"
+                                                autoComplete="description"
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "description",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                required
+                                            />
 
-                                        <InputError
-                                            message={errors.description}
-                                            className="mt-2"
-                                        />
-                                    </div>
+                                            <InputError
+                                                message={errors.description}
+                                                className="mt-2"
+                                            />
+                                        </div>
 
-                                    <div>
-                                        <InputLabel
-                                            htmlFor="assigned_to"
-                                            value="Assign To"
-                                        />
+                                        <div>
+                                            <InputLabel
+                                                htmlFor="assigned_to"
+                                                value="Assign To"
+                                            />
 
-                                        <SelectDropdown
-                                            key="assigned_to"
-                                            id="assigned_to"
-                                            name="assigned_to"
-                                            className="mt-1 block w-full"
-                                            value={data.assigned_to}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "assigned_to",
-                                                    e.target.value
-                                                )
-                                            }
-                                            required
-                                        >
-                                            <option value="">None</option>
-                                            {users.map((user) => (
-                                                <option
-                                                    key={user.id}
-                                                    value={user.id}
-                                                >
-                                                    {user.name}
+                                            <SelectDropdown
+                                                key="assigned_to"
+                                                id="assigned_to"
+                                                name="assigned_to"
+                                                className="mt-1 block w-full"
+                                                value={data.assigned_to}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "assigned_to",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                required
+                                            >
+                                                <option value="">None</option>
+                                                {users.map((user) => (
+                                                    <option
+                                                        key={user.id}
+                                                        value={user.id}
+                                                    >
+                                                        {user.name}
+                                                    </option>
+                                                ))}
+                                            </SelectDropdown>
+
+                                            <InputError
+                                                message={errors.assigned_to}
+                                                className="mt-2"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <InputLabel
+                                                htmlFor="for_client"
+                                                value="For Client"
+                                            />
+
+                                            <SelectDropdown
+                                                key="for_client"
+                                                id="for_client"
+                                                name="for_client"
+                                                className="mt-1 block w-full"
+                                                value={data.for_client}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "for_client",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                required
+                                            >
+                                                <option value="">None</option>
+                                                {clients.map((client) => (
+                                                    <option
+                                                        key={client.id}
+                                                        value={client.id}
+                                                    >
+                                                        {client.name}
+                                                    </option>
+                                                ))}
+                                            </SelectDropdown>
+
+                                            <InputError
+                                                message={errors.for_client}
+                                                className="mt-2"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <InputLabel
+                                                htmlFor="related_to_project"
+                                                value="Project Belongs To"
+                                            />
+
+                                            <SelectDropdown
+                                                key="related_to_project"
+                                                id="related_to_project"
+                                                name="related_to_project"
+                                                className="mt-1 block w-full"
+                                                value={data.related_to_project}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "related_to_project",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                required
+                                            >
+                                                <option value="">None</option>
+                                                {projects.map((project) => (
+                                                    <option
+                                                        key={project.id}
+                                                        value={project.id}
+                                                    >
+                                                        {project.title}
+                                                    </option>
+                                                ))}
+                                            </SelectDropdown>
+
+                                            <InputError
+                                                message={
+                                                    errors.related_to_project
+                                                }
+                                                className="mt-2"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <InputLabel
+                                                htmlFor="status"
+                                                value="Status"
+                                            />
+
+                                            <SelectDropdown
+                                                key="status"
+                                                id="status"
+                                                name="status"
+                                                className="mt-1 block w-full"
+                                                value={data.status}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "status",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                required
+                                            >
+                                                <option value={false}>
+                                                    Open
                                                 </option>
-                                            ))}
-                                        </SelectDropdown>
-
-                                        <InputError
-                                            message={errors.assigned_to}
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <InputLabel
-                                            htmlFor="for_client"
-                                            value="For Client"
-                                        />
-
-                                        <SelectDropdown
-                                            key="for_client"
-                                            id="for_client"
-                                            name="for_client"
-                                            className="mt-1 block w-full"
-                                            value={data.for_client}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "for_client",
-                                                    e.target.value
-                                                )
-                                            }
-                                            required
-                                        >
-                                            <option value="">None</option>
-                                            {clients.map((client) => (
-                                                <option
-                                                    key={client.id}
-                                                    value={client.id}
-                                                >
-                                                    {client.name}
+                                                <option value={true}>
+                                                    Completed
                                                 </option>
-                                            ))}
-                                        </SelectDropdown>
+                                            </SelectDropdown>
 
-                                        <InputError
-                                            message={errors.for_client}
-                                            className="mt-2"
-                                        />
+                                            <InputError
+                                                message={errors.status}
+                                                className="mt-2"
+                                            />
+                                        </div>
                                     </div>
 
-                                    <div>
-                                        <InputLabel
-                                            htmlFor="related_to_project"
-                                            value="Project Belongs To"
-                                        />
-
-                                        <SelectDropdown
-                                            key="related_to_project"
-                                            id="related_to_project"
-                                            name="related_to_project"
-                                            className="mt-1 block w-full"
-                                            value={data.related_to_project}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "related_to_project",
-                                                    e.target.value
-                                                )
-                                            }
-                                            required
-                                        >
-                                            <option value="">None</option>
-                                            {projects.map((project) => (
-                                                <option
-                                                    key={project.id}
-                                                    value={project.id}
-                                                >
-                                                    {project.title}
-                                                </option>
-                                            ))}
-                                        </SelectDropdown>
-
-                                        <InputError
-                                            message={errors.related_to_project}
-                                            className="mt-2"
+                                    <div className="mt-4">
+                                        <AttachmentsInput
+                                            name="attachments"
+                                            id="attachments"
+                                            attachedFiles={attachedFiles}
+                                            setAttachedFiles={setAttachedFiles}
+                                            data={data} // Pass the entire data object
+                                            setData={setData}
+                                            error={errors["attachments.*"]}
+                                            label="Attachments"
+                                            multiple={true}
+                                            clearInput={clearFileInput}
                                         />
                                     </div>
-
-                                    <div>
-                                        <InputLabel
-                                            htmlFor="status"
-                                            value="Status"
-                                        />
-
-                                        <SelectDropdown
-                                            key="status"
-                                            id="status"
-                                            name="status"
-                                            className="mt-1 block w-full"
-                                            value={data.status}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "status",
-                                                    e.target.value
-                                                )
-                                            }
-                                            required
-                                        >
-                                            <option value={false}>Open</option>
-                                            <option value={true}>
-                                                Completed
-                                            </option>
-                                        </SelectDropdown>
-
-                                        <InputError
-                                            message={errors.status}
-                                            className="mt-2"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="mt-4">
-                                    <AttachmentsInput
-                                        name="attachments"
-                                        id="attachments"
-                                        attachedFiles={attachedFiles}
-                                        setAttachedFiles={setAttachedFiles}
-                                        data={data} // Pass the entire data object
-                                        setData={setData}
-                                        error={errors["attachments.*"]}
-                                        label="Attachments"
-                                        multiple={true}
-                                        clearInput={clearFileInput}
-                                    />
-                                </div>
-
+                                </section>
                                 <div className="flex items-center justify-end mt-4">
                                     <PrimaryButton
                                         className="ms-4"

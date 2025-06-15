@@ -1,35 +1,49 @@
 import { Link } from "@inertiajs/react";
 import axios from "axios";
-import { Switch, Dialog, Transition } from "@headlessui/react";
-import { Fragment, startTransition, useState } from "react";
+import { Switch } from "@headlessui/react";
+import { startTransition, useState } from "react";
+import Modal from "./Modal";
+import SecondaryButton from "./SecondaryButton";
+import DangerButton from "./DangerButton";
+import PrimaryButton from "./PrimaryButton";
+import useAsyncNotifier from "@/hooks/useAsyncNotifier";
 
 export default function ClientsTableRow({ client }) {
     const [isActive, setIsActive] = useState(client.is_active);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isActivationPopupOpen, setIsActivationPopupOpen] = useState(false);
+    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState(null);
+    const notify = useAsyncNotifier();
 
-    const closeModal = () => {
-        setIsOpen(false);
+    const closeActivationPopup = () => {
+        setIsActivationPopupOpen(false);
         startTransition(() => {
             setError(null);
         });
     };
 
-    const deleteClient = () => {
-        setIsDeleting(true);
-        if (confirm("Are you sure you want to delete this client?")) {
-            axios
-                .request({
+    const deleteClient = async () => {
+        setIsDeletePopupOpen(false);
+        try {
+            setIsDeleting(true);
+            await notify(
+                axios.request({
                     url: route("clients.destroy", { client: client.id }),
                     method: "DELETE"
-                })
-                .then(() => {
-                    location.reload();
-                })
-                .catch((err) => console.error(err.message));
+                }),
+                {
+                    pendingMessage: "Deleting client...",
+                    successMessage: "Client deleted successfully.",
+                }
+            )
+            location.reload();
+
+        } catch (err) {
+            console.error(err.message);
+        } finally {
+            setIsDeleting(false);
         }
-        setIsDeleting(false);
     };
 
     const changeActivation = () => {
@@ -44,7 +58,7 @@ export default function ClientsTableRow({ client }) {
             })
             .then(() => {
                 setIsActive(!isActive);
-                setIsOpen(false);
+                setIsActivationPopupOpen(false);
             })
             .catch((err) => {
                 console.error(err.message);
@@ -93,122 +107,75 @@ export default function ClientsTableRow({ client }) {
                     <Switch
                         title={`${isActive ? "Active" : "Inactive"}`}
                         checked={isActive}
-                        onChange={() => setIsOpen(true)}
-                        className={`${
-                            isActive ? "bg-indigo-600" : "bg-indigo-400"
-                        } relative inline-flex h-6 w-11 items-center rounded-full`}
+                        onChange={() => setIsActivationPopupOpen(true)}
+                        className={`${isActive ? "bg-indigo-600" : "bg-gray-300"
+                            } relative inline-flex h-6 w-11 items-center rounded-full`}
                     >
                         <span className="sr-only">Activate Client</span>
                         <span
-                            className={`${
-                                isActive ? "translate-x-6" : "translate-x-1"
-                            } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                            className={`${isActive ? "translate-x-6" : "translate-x-1"
+                                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                         />
                     </Switch>
-                    <Transition appear show={isOpen} as={Fragment}>
-                        <Dialog
-                            as="div"
-                            className="relative z-10"
-                            onClose={closeModal}
-                        >
-                            <Transition.Child
-                                as={Fragment}
-                                enter="ease-out duration-300"
-                                enterFrom="opacity-0"
-                                enterTo="opacity-100"
-                                leave="ease-in duration-200"
-                                leaveFrom="opacity-100"
-                                leaveTo="opacity-0"
-                            >
-                                <div className="fixed inset-0 bg-black/25" />
-                            </Transition.Child>
-
-                            <div className="fixed inset-0 overflow-y-auto">
-                                <div className="flex min-h-full items-center justify-center p-4 text-center">
-                                    <Transition.Child
-                                        as={Fragment}
-                                        enter="ease-out duration-300"
-                                        enterFrom="opacity-0 scale-95"
-                                        enterTo="opacity-100 scale-100"
-                                        leave="ease-in duration-200"
-                                        leaveFrom="opacity-100 scale-100"
-                                        leaveTo="opacity-0 scale-95"
-                                    >
-                                        <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                                            <Dialog.Title
-                                                as="h3"
-                                                className="text-lg font-medium leading-6 text-gray-900"
-                                            >
-                                                {`Do you want to ${
-                                                    isActive
-                                                        ? "deactivate"
-                                                        : "activate"
-                                                } this client?`}
-                                            </Dialog.Title>
-                                            <div className="mt-2">
-                                                <p className="text-sm text-gray-500">
-                                                    Name :{" "}
-                                                    <em className="text-black">
-                                                        {client.name}
-                                                    </em>
-                                                </p>
-                                                <p className="text-sm text-gray-500">
-                                                    Email :{" "}
-                                                    <em className="text-black">
-                                                        {client.email}
-                                                    </em>
-                                                </p>
-                                                <p className="text-sm text-gray-500">
-                                                    VAT :{" "}
-                                                    <em className="text-black">
-                                                        {client.vat}
-                                                    </em>
-                                                </p>
-                                                <p className="text-sm text-gray-500">
-                                                    Status :{" "}
-                                                    <span className="text-black font-semibold">
-                                                        {isActive
-                                                            ? "Active"
-                                                            : "Inactive"}
-                                                    </span>
-                                                </p>
-                                            </div>
-
-                                            <div className="mt-4 flex justify-end gap-4">
-                                                <button
-                                                    type="button"
-                                                    className="inline-flex justify-center rounded-md border border-transparent bg-green-100 px-6 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
-                                                    onClick={changeActivation}
-                                                >
-                                                    Yes
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-6 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
-                                                    onClick={closeModal}
-                                                >
-                                                    No
-                                                </button>
-                                            </div>
-                                            {error && (
-                                                <div className="mt-4 text-red-500 text-sm">
-                                                    {error}
-                                                </div>
-                                            )}
-                                        </Dialog.Panel>
-                                    </Transition.Child>
-                                </div>
+                    <Modal
+                        show={isActivationPopupOpen}
+                        onClose={closeActivationPopup}
+                        maxWidth="md"
+                    >
+                        <div className="w-full transform overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all">
+                            <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+                                {`Do you want to ${isActive ? "deactivate" : "activate"
+                                    } this client?`}
+                            </h3>
+                            <div className="mt-2">
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    Name :{" "}
+                                    <em className="text-gray-500 dark:text-gray-300">
+                                        {client.name}
+                                    </em>
+                                </p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    Email :{" "}
+                                    <em className="text-gray-500 dark:text-gray-300">
+                                        {client.email}
+                                    </em>
+                                </p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    VAT :{" "}
+                                    <em className="text-gray-500 dark:text-gray-300">
+                                        {client.vat}
+                                    </em>
+                                </p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    Status :{" "}
+                                    <span className="text-gray-500 dark:text-gray-300 font-semibold">
+                                        {isActive ? "Active" : "Inactive"}
+                                    </span>
+                                </p>
                             </div>
-                        </Dialog>
-                    </Transition>
+
+                            <div className="mt-4 flex justify-end gap-4">
+                                <SecondaryButton onClick={closeActivationPopup}>
+                                    No
+                                </SecondaryButton>
+                                <PrimaryButton onClick={changeActivation}>
+                                    Yes
+                                </PrimaryButton>
+                            </div>
+                            {error && (
+                                <div className="mt-4 text-red-500 text-sm">
+                                    {error}
+                                </div>
+                            )}
+                        </div>
+                    </Modal>
                 </div>
             </td>
 
             <td className="p-4 border-b border-blue-gray-50 text-right">
                 <Link
-                    className={`inline-block relative align-middle select-none font-sans font-medium text-center uppercase transition-all ${
-                        isDeleting && "pointer-events-none"
-                    } w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30`}
+                    className={`inline-block relative align-middle select-none font-sans font-medium text-center uppercase transition-all ${isDeleting && "pointer-events-none"
+                        } w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30`}
                     href={route("clients.edit", {
                         client: client.id
                     })}
@@ -229,8 +196,9 @@ export default function ClientsTableRow({ client }) {
                 <button
                     className="relative align-middle select-none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
                     type="button"
-                    onClick={() => deleteClient(client.id)}
-                    disabled={isDeleting}
+                    onClick={() => setIsDeletePopupOpen(true)}
+                    role="button"
+                    disabled={isDeletePopupOpen || isDeleting}
                 >
                     <span className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 w-full h-full">
                         <svg
@@ -247,6 +215,37 @@ export default function ClientsTableRow({ client }) {
                         </svg>
                     </span>
                 </button>
+                <Modal
+                    show={isDeletePopupOpen}
+                    onClose={() => setIsDeletePopupOpen(false)}
+                    maxWidth="md"
+                >
+                    <div className="w-full transform overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all">
+                        <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+                            Are you sure you want to delete this client?
+                        </h3>
+                        <div className="mt-2">
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                This action cannot be undone. Please confirm
+                                that you want to delete the client.
+                            </p>
+                        </div>
+
+                        <div className="mt-4 flex justify-end gap-4">
+                            <SecondaryButton
+                                type="button"
+                                onClick={() => setIsDeletePopupOpen(false)}
+                            >
+                                Cancel
+                            </SecondaryButton>
+                            <DangerButton
+                                onClick={deleteClient}
+                            >
+                                Delete
+                            </DangerButton>
+                        </div>
+                    </div>
+                </Modal>
             </td>
         </tr>
     );

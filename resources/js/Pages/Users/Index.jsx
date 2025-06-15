@@ -1,23 +1,39 @@
+import DangerButton from "@/Components/DangerButton";
+import Modal from "@/Components/Modal";
 import Pagination from "@/Components/Pagination";
+import SecondaryButton from "@/Components/SecondaryButton";
 import { useRoles } from "@/Context/RolesContext";
+import useAsyncNotifier from "@/hooks/useAsyncNotifier";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import axios from "axios";
+import { useState } from "react";
 
 export default function Index({ auth, page }) {
     const roles = useRoles();
+    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const notify = useAsyncNotifier();
 
-    const deleteUser = (id) => {
-        if (confirm("Are you sure you want to delete this user?")) {
-            axios
-                .request({
+    const deleteUser = async (id) => {
+        setIsDeletePopupOpen(false);
+        try {
+            setIsDeleting(true);
+            await notify(
+                axios.request({
                     url: route("users.destroy", { user: id }),
                     method: "DELETE"
-                })
-                .then(() => {
-                    location.reload();
-                })
-                .catch((err) => console.error(err.message));
+                }),
+                {
+                    pendingMessage: "Deleting user...",
+                    successMessage: "User deleted successfully!"
+                }
+            );
+            location.reload();
+        } catch (error) {
+            console.error(error.message);
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -38,12 +54,22 @@ export default function Index({ auth, page }) {
                         <div className="w-full flex justify-end p-3">
                             <Link
                                 href={route("users.create")}
-                                className="inline-block p-2 border border:border-gray-800 dark:border-white rounded-md font-normal font-sans text-sm"
+                                className={`inline-block p-2 border border:border-gray-800 dark:border-white rounded-md font-normal font-sans text-sm${
+                                    isDeleting
+                                        ? " pointer-events-none opacity-50"
+                                        : ""
+                                }`}
                             >
                                 Add User
                             </Link>
                         </div>
-                        <div className="p-4 pt-0 px-0 overflow-auto">
+                        <div
+                            className={`p-4 pt-0 px-0 overflow-auto${
+                                isDeleting
+                                    ? " pointer-events-none opacity-50"
+                                    : ""
+                            }`}
+                        >
                             <table className="w-full min-w-max table-auto text-left">
                                 <thead>
                                     <tr>
@@ -75,13 +101,27 @@ export default function Index({ auth, page }) {
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {page.data.length === 0 && (
+                                        <tr>
+                                            <td
+                                                colSpan="6"
+                                                className="text-center p-4"
+                                            >
+                                                No users found.
+                                            </td>
+                                        </tr>
+                                    )}
                                     {page.data.map((user, idx) => (
                                         <tr key={user.id}>
                                             <td className="p-4 border-b border-blue-gray-50 w-32">
                                                 <div className="flex items-center gap-3">
                                                     <div className="flex flex-col">
                                                         <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-                                                            {idx + 1}
+                                                            {(page.current_page -
+                                                                1) *
+                                                                page.per_page +
+                                                                idx +
+                                                                1}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -140,8 +180,14 @@ export default function Index({ auth, page }) {
                                                 <button
                                                     className="relative align-middle select-none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
                                                     type="button"
+                                                    disabled={
+                                                        isDeleting ||
+                                                        isDeletePopupOpen
+                                                    }
                                                     onClick={() =>
-                                                        deleteUser(user.id)
+                                                        setIsDeletePopupOpen(
+                                                            true
+                                                        )
                                                     }
                                                 >
                                                     <span className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 w-full h-full">
@@ -159,6 +205,55 @@ export default function Index({ auth, page }) {
                                                         </svg>
                                                     </span>
                                                 </button>
+                                                <Modal
+                                                    show={isDeletePopupOpen}
+                                                    onClose={() =>
+                                                        setIsDeletePopupOpen(
+                                                            false
+                                                        )
+                                                    }
+                                                    maxWidth="md"
+                                                >
+                                                    <div className="w-full transform overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all">
+                                                        <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+                                                            Are you sure you
+                                                            want to delete this
+                                                            user?
+                                                        </h3>
+                                                        <div className="mt-2">
+                                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                                This action
+                                                                cannot be
+                                                                undone. Please
+                                                                confirm that you
+                                                                want to delete
+                                                                the user.
+                                                            </p>
+                                                        </div>
+
+                                                        <div className="mt-4 flex justify-end gap-4">
+                                                            <SecondaryButton
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    setIsDeletePopupOpen(
+                                                                        false
+                                                                    )
+                                                                }
+                                                            >
+                                                                Cancel
+                                                            </SecondaryButton>
+                                                            <DangerButton
+                                                                onClick={() =>
+                                                                    deleteUser(
+                                                                        user.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </DangerButton>
+                                                        </div>
+                                                    </div>
+                                                </Modal>
                                             </td>
                                         </tr>
                                     ))}

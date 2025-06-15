@@ -14,9 +14,9 @@ class PermissionsSeeder extends Seeder
     public function run(): void
     {
         $p = new Permission([
-            'user_id' => '9d12b37a-52b6-49e8-bfba-54df960a6a96',
+            'user_id' => '9f299a2c-bf6e-49f9-b93d-ebdd3b6119f2', // This was localhost Admin
             'resource_id' => 1,
-            'value' => 5,
+            'value' => 15,
         ]);
         $p->save();
     }

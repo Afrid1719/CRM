@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Constants\PermissionActions;
+use App\Models\User;
 
 class PermissionHelpers
 {
@@ -13,8 +14,18 @@ class PermissionHelpers
      * @param string $action
      * @return bool
      */
-    public static function hasPermission(int $permission, string $action): bool
+    public static function hasPermission(User $user, string $action, string $resource): bool
     {
+        $permission = $user->permissions()
+            ->where('resource_id', function ($query) use ($resource) {
+                $query->select('id')
+                    ->from('resources')
+                    ->where('name', $resource);
+            })
+            ->pluck('value');
+
+        $permission = $permission->first();
+
         return ($permission & constant(PermissionActions::class . '::' . strtoupper($action))['value']) !== 0;
     }
 }
