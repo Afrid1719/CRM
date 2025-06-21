@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+        image: crm-laravel-app
+        container_name: crm-app
+        volumes:
+            - .:/var/www/html
+        depends_on:
+            - mysql
+        networks:
+            - crm-net
+
+    nginx:
+        image: nginx:alpine
+        container_name: crm-nginx
+        ports:
+            - "8000:80"
+        volumes:
+            - .:/var/www/html
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - app
+        networks:
+            - crm-net
+
+    mysql:
+        image: mysql:8
+        container_name: crm-mysql
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: crm
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+        volumes:
+            - mysql-data:/var/lib/mysql
+        networks:
+            - crm-net
+
+    node:
+        image: node:18-alpine
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+        entrypoint: ["npm"]
+        networks:
+            - crm-net
+
+volumes:
+    mysql-data:
+
+networks:
+    crm-net:
