@@ -27,6 +27,10 @@ class Project extends Model
         'status',
     ];
 
+    protected $casts = [
+        'deadline' => 'datetime',
+    ];
+
     protected static function boot()
     {
         parent::boot();
