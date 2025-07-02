@@ -20,14 +20,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy existing application directory
+# Copy application files (excluding node_modules/vendor via .dockerignore)
 COPY . .
-
-# Install Node dependencies
-RUN npm install --legacy-peer-deps
-
-# Build React frontend
-RUN npm run build
 
 # Generate self-signed SSL cert
 RUN mkdir -p /etc/ssl/local && \

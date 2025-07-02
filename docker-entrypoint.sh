@@ -2,8 +2,8 @@
 
 set -e
 
-echo "🔁 Waiting for MySQL..."
-while ! mysqladmin ping -h"crm-mysql" --silent; do
+echo "🔁 Waiting for MySQL with Laravel..."
+until php artisan migrate:status > /dev/null 2>&1; do
   sleep 1
 done
 
@@ -13,8 +13,8 @@ composer install --no-interaction --prefer-dist
 echo "📦 Installing NPM packages..."
 npm install --legacy-peer-deps
 
-echo "🔨 Building frontend..."
-npm run build
+echo "⚡ Starting Vite dev server..."
+npm run dev -- --host 0.0.0.0 &
 
 echo "🔑 Generating app key..."
 php artisan key:generate
@@ -25,11 +25,8 @@ php artisan migrate --force
 echo "🔗 Linking storage..."
 php artisan storage:link || true
 
-echo "✅ Application is ready at https://crm.localhost"
+echo "✅ Application is ready at http://crm.localhost"
 
 exec php artisan serve \
   --host=0.0.0.0 \
   --port=8000 \
-  --tls \
-  --cert=/etc/ssl/local/crm.localhost.crt \
-  --key=/etc/ssl/local/crm.localhost.key

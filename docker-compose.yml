@@ -30,9 +30,13 @@ services:
         container_name: crm-app
         expose:
             - "8000"
+        ports:
+            - "5173:5173" # Vite dev server
         environment:
             - VIRTUAL_HOST=crm.localhost
             - VIRTUAL_PORT=8000
+            - APP_ENV=local
+            - VITE_DEV_SERVER=true
         volumes:
             - .:/var/www/html
         networks:
