@@ -26,7 +26,7 @@ services:
     app:
         build:
             context: .
-            dockerfile: docker/php/Dockerfile
+            dockerfile: Dockerfile
         container_name: crm-app
         expose:
             - "8000"
@@ -43,6 +43,14 @@ services:
             - crm-net
         depends_on:
             - mysql
+            # mysql:
+            #     condition: service_healthy
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000"]
+            # test: ["CMD", "curl", "-f", "http://localhost:8000/health"] Add this route as /health in the app
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
     mysql:
         image: mysql:8
@@ -52,6 +60,21 @@ services:
             MYSQL_DATABASE: crm
             MYSQL_USER: user
             MYSQL_PASSWORD: password
+        # healthcheck:
+        #     test:
+        #         [
+        #             "CMD",
+        #             "mysqladmin",
+        #             "ping",
+        #             "-h",
+        #             "localhost",
+        #             "-u",
+        #             "root",
+        #             "-proot"
+        #         ]
+        #     interval: 10s
+        #     timeout: 5s
+        #     retries: 5
         volumes:
             - mysql-data:/var/lib/mysql
         networks:

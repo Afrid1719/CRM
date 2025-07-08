@@ -2,10 +2,28 @@
 
 set -e
 
-echo "🔁 Waiting for MySQL with Laravel..."
-until php artisan migrate:status > /dev/null 2>&1; do
+
+# Detect available admin CLI
+if command -v mysqladmin > /dev/null 2>&1; then
+  DB_ADMIN="mysqladmin"
+elif command -v mariadb-admin > /dev/null 2>&1; then
+  DB_ADMIN="mariadb-admin"
+else
+  echo "❌ Neither mysqladmin nor mariadb-admin is available"
+  exit 1
+fi
+
+echo "🔁 Waiting for MySQL to be ready using $DB_ADMIN..."
+until $DB_ADMIN ping \
+  -h"${DB_HOST:-crm-mysql}" \
+  -u"${DB_USER:-user}" \
+  -p"${DB_PASSWORD:-password}" \
+  --silent \
+  --ssl=OFF 2>/dev/null; do
   sleep 1
 done
+
+echo "✅ MySQL is ready!"
 
 echo "📦 Installing Composer dependencies..."
 composer install --no-interaction --prefer-dist
