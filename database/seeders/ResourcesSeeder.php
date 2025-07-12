@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -21,5 +20,7 @@ class ResourcesSeeder extends Seeder
             ['name' => 'Tasks'],
             ['name' => 'Profile']
         ]);
+
+        $this->command->info('Resources seeded successfully.');
     }
 }
