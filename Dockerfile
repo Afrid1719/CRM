@@ -1,4 +1,4 @@
-# Using the cli instead of fpm as we are not using fast cgi manager for web server
+# Stage: Build
 FROM php:8.2-cli-alpine
 
 # Install system dependencies
@@ -23,10 +23,29 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application files (excluding node_modules/vendor via .dockerignore)
+# ------------------------
+# 1. Copy composer files first for caching
+# ------------------------
+COPY composer.json composer.lock ./
+
+# 2. Install PHP dependencies without running post-scripts (no artisan yet)
+RUN composer install --no-interaction --prefer-dist --no-scripts
+
+# ------------------------
+# 3. Copy rest of the application (artisan included)
+# ------------------------
 COPY . .
 
-# Fix file permissions
+# 4. Run post-autoload-dump scripts manually (artisan is now available)
+RUN composer run-script post-autoload-dump
+
+# ------------------------
+# Optional npm caching step (improves rebuild time)
+# ------------------------
+COPY package.json package-lock.json ./
+RUN npm install --legacy-peer-deps
+
+# Fix file permissions (optional)
 RUN chown -R www-data:www-data /var/www/html
 
 # Generate self-signed SSL cert

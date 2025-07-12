@@ -25,12 +25,6 @@ done
 
 echo "✅ MySQL is ready!"
 
-echo "📦 Installing Composer dependencies..."
-composer install --no-interaction --prefer-dist
-
-echo "📦 Installing NPM packages..."
-npm install --legacy-peer-deps
-
 echo "⚡ Starting Vite dev server..."
 npm run dev -- --host 0.0.0.0 &
 
