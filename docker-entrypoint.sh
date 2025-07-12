@@ -2,7 +2,6 @@
 
 set -e
 
-
 # Detect available admin CLI
 if command -v mysqladmin > /dev/null 2>&1; then
   DB_ADMIN="mysqladmin"
@@ -32,7 +31,10 @@ echo "🔑 Generating app key..."
 php artisan key:generate
 
 echo "🧱 Running migrations..."
-php artisan migrate --force
+php artisan migrate
+
+echo "🌱 Seeding database..."
+php artisan db:seed || true
 
 echo "🔗 Linking storage..."
 php artisan storage:link || true

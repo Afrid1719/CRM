@@ -13,5 +13,7 @@ class TaskSeeder extends Seeder
     public function run(): void
     {
         Task::factory()->count(59)->create();
+
+        $this->command->info('59 random tasks created.');
     }
 }

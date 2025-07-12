@@ -45,6 +45,7 @@ class AdminSeeder extends Seeder
             }
             $permission->save();
         }
+
         $this->command->info('Admin user created with full permissions.');
     }
 }

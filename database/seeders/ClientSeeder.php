@@ -13,5 +13,7 @@ class ClientSeeder extends Seeder
     public function run(): void
     {
         Client::factory()->count(25)->create();
+
+        $this->command->info('25 random clients created.');
     }
 }
