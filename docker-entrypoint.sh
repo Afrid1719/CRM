@@ -30,11 +30,8 @@ npm run dev -- --host 0.0.0.0 &
 echo "🔑 Generating app key..."
 php artisan key:generate
 
-echo "🧱 Running migrations..."
-php artisan migrate
-
-echo "🌱 Seeding database..."
-php artisan db:seed || true
+echo "🧱 Running migrations and 🌱 seeders..."
+php artisan migrate:fresh --seed --force || true
 
 echo "🔗 Linking storage..."
 php artisan storage:link || true
