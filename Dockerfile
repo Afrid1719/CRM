@@ -45,16 +45,9 @@ RUN composer run-script post-autoload-dump
 COPY package.json package-lock.json ./
 RUN npm install --legacy-peer-deps
 
-# Fix file permissions (optional)
-RUN chown -R www-data:www-data /var/www/html
-
-# Generate self-signed SSL cert
-RUN mkdir -p /etc/ssl/local && \
-    openssl req -x509 -nodes -days 365 \
-    -newkey rsa:2048 \
-    -keyout /etc/ssl/local/crm.localhost.key \
-    -out /etc/ssl/local/crm.localhost.crt \
-    -subj "/CN=crm.localhost"
+# Optimize file permissions: only change ownership for files that need it
+# Use a multi-stage approach if possible, or limit chown to writable dirs
+RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

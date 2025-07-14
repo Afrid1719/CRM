@@ -36,7 +36,7 @@ php artisan migrate:fresh --seed --force || true
 echo "🔗 Linking storage..."
 php artisan storage:link || true
 
-echo "✅ Application is ready at http://crm.localhost"
+echo "✅ Application is ready at https://crm.localhost"
 
 exec php artisan serve \
   --host=0.0.0.0 \
