@@ -47,6 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::put('users/{user}/permissions', [UsersController::class, 'updatePermissions'])->name('users.permissions.update');
 });
 
+Route::get('/health', function () {
+    return 'OK';
+});
+
 // This is only for testing purpose, it can be removed later
 Route::get('send-mail', function () {
     Mail::to('aliatif908@gmail.com')->send(new TestMail('test'));

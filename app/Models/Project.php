@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,15 +26,9 @@ class Project extends Model
         'status',
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        // This is just for practice to save in a different format
-        static::saving(function ($model) {
-            $model->deadline = Carbon::parse($model->deadline)->format('Y-m-d');
-        });
-    }
+    protected $casts = [
+        'deadline' => 'date',
+    ];
 
     protected function deadline(): Attribute
     {

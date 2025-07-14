@@ -1,14 +1,23 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
+    server: {
+        host: "0.0.0.0", // VERY important to allow access from Docker
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            host: "localhost",
+            port: 5173
+        }
+    },
     plugins: [
         laravel({
-            input: 'resources/js/app.jsx',
-            ssr: 'resources/js/ssr.jsx',
-            refresh: true,
+            input: "resources/js/app.jsx",
+            ssr: "resources/js/ssr.jsx",
+            refresh: true
         }),
-        react(),
-    ],
+        react()
+    ]
 });

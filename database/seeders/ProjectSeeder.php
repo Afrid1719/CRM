@@ -13,5 +13,7 @@ class ProjectSeeder extends Seeder
     public function run(): void
     {
         Project::factory()->count(50)->create();
+
+        $this->command->info('50 random projects created.');
     }
 }

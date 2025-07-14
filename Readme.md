@@ -1,14 +1,24 @@
 # CRM
 
-A **Laravel 10** project with **React.js** frontend integrated inside the `resources/js` folder.
+A simple CRM application built with Laravel 10, React.js, Inertia.js, and Tailwind CSS, designed for local development using Docker.
 
 ## Requirements
 
--   PHP >= 8.1
--   Composer
--   Node.js & npm
--   MySQL (or any preferred database)
--   Webserver (XAMPP / Laragon / Laravel Sail / Docker, etc.)
+-   Docker Desktop (for Windows) or Docker and Docker Compose (for Linux/macOS)
+-   Git
+
+## Tech Stack
+
+-   **Backend**: Laravel 10
+-   **Frontend**: React.js, Inertia.js, and Tailwind CSS
+-   **Database**: MySQL
+-   **Web Server**: Laravel's built-in server
+-   **Containerization**: Docker
+-   **Task Scheduling**: Laravel's built-in scheduler for background jobs
+-   **SSL**: Self-signed SSL certificate for local development
+-   **Version Control**: Git
+-   **Package Management**: Composer for PHP dependencies, npm for JavaScript dependencies
+-   **Project Management**: Github --> [CRM](https://github.com/users/Afrid1719/projects/1)
 
 ## Getting Started
 
@@ -19,47 +29,27 @@ git clone https://github.com/Afrid1719/CRM.git
 cd CRM
 ```
 
-#### Step 2: Install PHP dependencies
+#### Step 2: Install Docker Desktop on Windows (alternatively, you can install Docker and Docker Compose on Linux or macOS)
 
-```bash
-composer install
-```
+Follow the [official Docker installation guide](https://docs.docker.com/get-docker/) for your operating system.
 
 #### Step 3: Set up the environment file
 
 ```bash
 cp .env.example .env
-php artisan key:generate
 ```
 
-#### Step 4: Install JavaScript dependencies
+#### Step 4: Build and start the Docker containers
 
 ```bash
-npm install
-npm run dev
+docker-compose up -d --build
 ```
 
-#### Step 5: Run database migrations
+This command builds the Docker containers and starts them in detached mode. It also installs the necessary composer dependencies and npm dependencies. It generates a self-signed SSL certificate for local development and sets up the database. It generates the application key and runs the migrations with seeders. It also links the storage directory.
 
-```bash
-php artisan migrate
-```
+#### Step 5: Access the application
 
-**(Optional) Seed the database with sample data for development:**
-
-```bash
-php artisan db:seed
-```
-
-This command populates your database using the seeders in the `database/seeders` directory. You can customize or add your own seeders as needed for testing and development.
-
-#### Step 6: Link the storage directory
-
-```bash
-php artisan storage:link
-```
-
-This command creates a symbolic link from `public/storage` to `storage/app/public`, allowing public access to user-uploaded files.
+You can access the application in your web browser at `https://crm.localhost` and database management at `https://db.crm.localhost`.
 
 ### Folder Structure
 
@@ -69,8 +59,10 @@ Below is an overview of the main folder structure:
 CRM/
 ├── app/                # Contains the core application code
 ├── bootstrap/          # Contains the application bootstrap files
+├── certs/              # Contains the SSL certificates
 ├── config/             # Configuration files for the application
 ├── database/           # Database migrations, factories, and seeders
+├── nginx/              # Nginx configuration files
 ├── public/             # Publicly accessible files (e.g., index.php, assets)
 ├── resources/          # Views, language files, and frontend assets
 │   ├── js/             # React.js frontend code
@@ -79,11 +71,17 @@ CRM/
 ├── storage/            # Logs, cache, and compiled files
 ├── tests/              # Automated tests
 ├── vendor/             # Composer dependencies
+├── .dockerignore       # Files to ignore in Docker builds
 ├── .env.example        # Example environment configuration file
 ├── artisan             # Artisan CLI entry point
 ├── composer.json       # Composer dependencies configuration
+├── docker-compose.yml  # Docker Compose configuration
+├── docker-entrypoint.sh # Custom entrypoint script for Docker
+├── Dockerfile          # Dockerfile for building the application image
+├── jsconfig.json      # JavaScript configuration file
 ├── package.json        # Node.js dependencies configuration
-└── webpack.mix.js      # Laravel Mix configuration for asset compilation
+├── tailwind.config.js  # Tailwind CSS configuration
+└── vite.config.js      # Vite configuration for asset compilation
 ```
 
 ## Job Scheduling: Deleting Unused Files
