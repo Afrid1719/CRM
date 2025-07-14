@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Constants\Roles;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 
@@ -21,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        URL::forceScheme('https');
         Inertia::share('roles', Roles::all());
     }
 }

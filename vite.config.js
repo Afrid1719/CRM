@@ -1,13 +1,14 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import react from "@vitejs/plugin-react";
+import basicSsl from "@vitejs/plugin-basic-ssl";
 
 export default defineConfig({
     server: {
         host: "0.0.0.0", // VERY important to allow access from Docker
         port: 5173,
-        strictPort: true,
         hmr: {
+            protocol: "wss",
             host: "localhost",
             port: 5173
         }
@@ -18,6 +19,7 @@ export default defineConfig({
             ssr: "resources/js/ssr.jsx",
             refresh: true
         }),
-        react()
+        react(),
+        basicSsl() // Enable HTTPS support
     ]
 });

@@ -24,9 +24,6 @@ done
 
 echo "✅ MySQL is ready!"
 
-echo "⚡ Starting Vite dev server..."
-npm run dev -- --host 0.0.0.0 &
-
 echo "🔑 Generating app key..."
 php artisan key:generate
 
@@ -35,6 +32,9 @@ php artisan migrate:fresh --seed --force || true
 
 echo "🔗 Linking storage..."
 php artisan storage:link || true
+
+echo "⚡ Starting Vite dev server..."
+npm run dev &
 
 echo "✅ Application is ready at https://crm.localhost"
 
