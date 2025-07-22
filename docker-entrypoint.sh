@@ -40,4 +40,4 @@ echo "✅ Application is ready at https://crm.localhost"
 
 exec php artisan serve \
   --host=0.0.0.0 \
-  --port=8000 \
+  --port=8000

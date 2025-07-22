@@ -1,32 +1,4 @@
 services:
-    cert-gen:
-        image: alpine:latest
-        container_name: cert-generator
-        entrypoint: /bin/sh
-        command:
-            - -c
-            - |
-                apk add --no-cache openssl && \
-                mkdir -p /etc/nginx/certs && \
-                if [ ! -f /etc/nginx/certs/crm.localhost.crt ]; then
-                openssl req -x509 -nodes -days 365 \
-                    -newkey rsa:2048 \
-                    -keyout /etc/nginx/certs/crm.localhost.key \
-                    -out /etc/nginx/certs/crm.localhost.crt \
-                    -subj "/CN=crm.localhost";
-                fi && \
-                if [ ! -f /etc/nginx/certs/db.crm.localhost.crt ]; then
-                openssl req -x509 -nodes -days 365 \
-                    -newkey rsa:2048 \
-                    -keyout /etc/nginx/certs/db.crm.localhost.key \
-                    -out /etc/nginx/certs/db.crm.localhost.crt \
-                    -subj "/CN=db.crm.localhost";
-                fi
-        volumes:
-            - ./certs:/etc/nginx/certs
-        networks:
-            - crm-net
-
     nginx-proxy:
         image: nginxproxy/nginx-proxy
         container_name: nginx-proxy
@@ -36,8 +8,6 @@ services:
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
             - ./certs:/etc/nginx/certs:ro
-        depends_on:
-            - cert-gen
         networks:
             - crm-net
 
@@ -63,18 +33,17 @@ services:
         ports:
             - "5173:5173" # Vite dev server
         environment:
-            - VIRTUAL_HOST=crm.localhost
+            - VIRTUAL_HOST=crm.localhost,crm.vite.localhost
             - VIRTUAL_PORT=8000
             - APP_ENV=local
             - VITE_DEV_SERVER=true
         volumes:
             - .:/var/www/html
+            - ./certs:/etc/nginx/certs:ro
         networks:
             - crm-net
         depends_on:
             - mysql
-            # mysql:
-            #     condition: service_healthy
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
             interval: 10s
@@ -89,21 +58,6 @@ services:
             MYSQL_DATABASE: crm
             MYSQL_USER: user
             MYSQL_PASSWORD: password
-        # healthcheck:
-        #     test:
-        #         [
-        #             "CMD",
-        #             "mysqladmin",
-        #             "ping",
-        #             "-h",
-        #             "localhost",
-        #             "-u",
-        #             "root",
-        #             "-proot"
-        #         ]
-        #     interval: 10s
-        #     timeout: 5s
-        #     retries: 5
         volumes:
             - mysql-data:/var/lib/mysql
         networks:
