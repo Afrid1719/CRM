@@ -6,6 +6,7 @@ A simple CRM application built with Laravel 10, React.js, Inertia.js, and Tailwi
 
 -   Docker Desktop (for Windows) or Docker and Docker Compose (for Linux/macOS)
 -   Git
+-   [mkcert](https://github.com/FiloSottile/mkcert) (for generating local SSL certificates)
 
 ## Tech Stack
 
@@ -33,13 +34,39 @@ cd CRM
 
 Follow the [official Docker installation guide](https://docs.docker.com/get-docker/) for your operating system.
 
-#### Step 3: Set up the environment file
+#### Step 3: Install mkcert on Windows
+
+1. Download the latest release from the [mkcert releases page](https://github.com/FiloSottile/mkcert/releases).
+2. Extract the downloaded archive and place the `mkcert.exe` file in a directory included in your system's `PATH`.
+3. Open a terminal (recommended: Git Bash) and run the following command to install the local CA:
+
+```bash
+mkcert -install
+```
+
+4. Generate a self-signed SSL certificate for local development:
+
+```bash
+mkcert -cert-file certs/crm.localhost.crt -key-file certs/crm.localhost.key crm.localhost
+mkcert -cert-file certs/db.crm.localhost.crt -key-file certs/db.crm.localhost.key db.crm.localhost
+mkcert -cert-file certs/crm.vite.localhost.crt -key-file certs/crm.vite.localhost.key crm.vite.localhost
+```
+
+#### Step 4: Set up the environment file
 
 ```bash
 cp .env.example .env
 ```
 
-#### Step 4: Build and start the Docker containers
+Update your `.env` file with the following URLs:
+
+```env
+APP_URL=https://crm.localhost
+VITE_DEV_SERVER=true
+VITE_URL=https://crm.vite.localhost:5173
+```
+
+#### Step 5: Build and start the Docker containers
 
 ```bash
 docker-compose up -d --build
@@ -53,7 +80,7 @@ For seeding the database with initial data, you can run (inspect the app logs to
 docker-compose exec app php artisan db:seed
 ```
 
-#### Step 5: Access the application
+#### Step 6: Access the application
 
 You can access the application in your web browser at `https://crm.localhost` and database management at `https://db.crm.localhost`.
 
