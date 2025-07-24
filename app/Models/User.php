@@ -110,11 +110,25 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isAdmin(): bool
     {
-        return $this->role === Roles::ADMIN;
+        return $this->hasRole(Roles::ADMIN);
     }
 
     public function permissions()
     {
         return $this->hasMany(Permission::class);
+    }
+
+    public function hasRole(int $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    public function scopeVisibleTo(Builder $query, User $user)
+    {
+        if ($user->isAdmin()) {
+            $query;
+        } else {
+            return $query->where('role', '!=', Roles::ADMIN);
+        }
     }
 }

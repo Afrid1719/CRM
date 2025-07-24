@@ -24,7 +24,7 @@ class UsersController extends Controller
         }
 
         return Inertia::render('Users/Index', [
-            'page' => User::query()->paginate(10),
+            'page' => User::visibleTo(auth()->user())->paginate(10),
         ]);
     }
 
