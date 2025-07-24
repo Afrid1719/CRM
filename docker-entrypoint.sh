@@ -27,8 +27,8 @@ echo "✅ MySQL is ready!"
 echo "🔑 Generating app key..."
 php artisan key:generate
 
-echo "🧱 Running migrations and 🌱 seeders..."
-php artisan migrate:fresh --seed --force || true
+echo "🧱 Running migrations..."
+php artisan migrate || true
 
 echo "🔗 Linking storage..."
 php artisan storage:link || true

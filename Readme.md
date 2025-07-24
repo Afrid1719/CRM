@@ -45,7 +45,13 @@ cp .env.example .env
 docker-compose up -d --build
 ```
 
-This command builds the Docker containers and starts them in detached mode. It also installs the necessary composer dependencies and npm dependencies. It generates a self-signed SSL certificate for local development and sets up the database. It generates the application key and runs the migrations with seeders. It also links the storage directory.
+This command builds the Docker containers and starts them in detached mode. It also installs the necessary composer dependencies and npm dependencies. It generates a self-signed SSL certificate for local development and sets up the database. It generates the application key and runs the migrations. It also links the storage directory.
+
+For seeding the database with initial data, you can run (inspect the app logs to run this after migrations are complete):
+
+```bash
+docker-compose exec app php artisan db:seed
+```
 
 #### Step 5: Access the application
 
