@@ -1,25 +1,14 @@
 # CRM
 
-A simple CRM application built with Laravel 10, React.js, Inertia.js, and Tailwind CSS, designed for local development using Docker.
+A **Laravel 10** project with **React.js** frontend integrated inside the `resources/js` folder.
 
 ## Requirements
 
--   Docker Desktop (for Windows) or Docker and Docker Compose (for Linux/macOS)
--   Git
--   [mkcert](https://github.com/FiloSottile/mkcert) (for generating local SSL certificates)
-
-## Tech Stack
-
--   **Backend**: Laravel 10
--   **Frontend**: React.js, Inertia.js, and Tailwind CSS
--   **Database**: MySQL
--   **Web Server**: Laravel's built-in server
--   **Containerization**: Docker
--   **Task Scheduling**: Laravel's built-in scheduler for background jobs
--   **SSL**: Self-signed SSL certificate for local development
--   **Version Control**: Git
--   **Package Management**: Composer for PHP dependencies, npm for JavaScript dependencies
--   **Project Management**: Github --> [CRM](https://github.com/users/Afrid1719/projects/1)
+-   PHP >= 8.2
+-   Composer
+-   Node.js & npm
+-   MySQL (or any preferred database)
+-   Webserver (XAMPP / Laragon / Laravel Sail / Docker, etc.)
 
 ## Getting Started
 
@@ -30,59 +19,55 @@ git clone https://github.com/Afrid1719/CRM.git
 cd CRM
 ```
 
-#### Step 2: Install Docker Desktop on Windows (alternatively, you can install Docker and Docker Compose on Linux or macOS)
-
-Follow the [official Docker installation guide](https://docs.docker.com/get-docker/) for your operating system.
-
-#### Step 3: Install mkcert on Windows
-
-1. Download the latest release from the [mkcert releases page](https://github.com/FiloSottile/mkcert/releases).
-2. Extract the downloaded archive and place the `mkcert.exe` file in a directory included in your system's `PATH`.
-3. Open a terminal (recommended: Git Bash) and run the following command to install the local CA:
+#### Step 2: Install PHP dependencies
 
 ```bash
-mkcert -install
+composer install
 ```
 
-4. Generate a self-signed SSL certificate for local development:
-
-```bash
-mkcert -cert-file certs/crm.localhost.crt -key-file certs/crm.localhost.key crm.localhost
-mkcert -cert-file certs/db.crm.localhost.crt -key-file certs/db.crm.localhost.key db.crm.localhost
-mkcert -cert-file certs/crm.vite.localhost.crt -key-file certs/crm.vite.localhost.key crm.vite.localhost
-```
-
-#### Step 4: Set up the environment file
+#### Step 3: Set up the environment file
 
 ```bash
 cp .env.example .env
+php artisan key:generate
 ```
 
-Update your `.env` file with the following URLs:
-
-```env
-APP_URL=https://crm.localhost
-VITE_DEV_SERVER=true
-VITE_URL=https://crm.vite.localhost:5173
-```
-
-#### Step 5: Build and start the Docker containers
+#### Step 4: Install JavaScript dependencies
 
 ```bash
-docker-compose up -d --build
+npm install
+npm run dev
 ```
 
-This command builds the Docker containers and starts them in detached mode. It also installs the necessary composer dependencies and npm dependencies. It generates a self-signed SSL certificate for local development and sets up the database. It generates the application key and runs the migrations. It also links the storage directory.
-
-For seeding the database with initial data, you can run (inspect the app logs to run this after migrations are complete):
+#### Step 5: Run database migrations
 
 ```bash
-docker-compose exec app php artisan db:seed
+php artisan migrate
 ```
 
-#### Step 6: Access the application
+**(Optional) Seed the database with sample data for development:**
 
-You can access the application in your web browser at `https://crm.localhost` and database management at `https://db.crm.localhost`.
+```bash
+php artisan db:seed
+```
+
+This command populates your database using the seeders in the `database/seeders` directory. You can customize or add your own seeders as needed for testing and development.
+
+#### Step 6: Link the storage directory
+
+```bash
+php artisan storage:link
+```
+
+This command creates a symbolic link from `public/storage` to `storage/app/public`, allowing public access to user-uploaded files.
+
+#### Step 7: Start the development server
+
+```bash
+php artisan serve
+```
+
+You can now access the application at `http://localhost:8000`.
 
 ### Folder Structure
 
@@ -92,10 +77,8 @@ Below is an overview of the main folder structure:
 CRM/
 ├── app/                # Contains the core application code
 ├── bootstrap/          # Contains the application bootstrap files
-├── certs/              # Contains the SSL certificates
 ├── config/             # Configuration files for the application
 ├── database/           # Database migrations, factories, and seeders
-├── nginx/              # Nginx configuration files
 ├── public/             # Publicly accessible files (e.g., index.php, assets)
 ├── resources/          # Views, language files, and frontend assets
 │   ├── js/             # React.js frontend code
@@ -104,17 +87,18 @@ CRM/
 ├── storage/            # Logs, cache, and compiled files
 ├── tests/              # Automated tests
 ├── vendor/             # Composer dependencies
-├── .dockerignore       # Files to ignore in Docker builds
 ├── .env.example        # Example environment configuration file
 ├── artisan             # Artisan CLI entry point
 ├── composer.json       # Composer dependencies configuration
-├── docker-compose.yml  # Docker Compose configuration
-├── docker-entrypoint.sh # Custom entrypoint script for Docker
-├── Dockerfile          # Dockerfile for building the application image
-├── jsconfig.json      # JavaScript configuration file
+├── composer.lock       # Composer dependencies lock file
+├── jsconfig.json      # JavaScript configuration for ESLint and Prettier
+├── package-lock.json   # npm dependencies lock file
 ├── package.json        # Node.js dependencies configuration
+├── phpunit.xml         # PHPUnit configuration for testing
+├── postcss.config.js   # PostCSS configuration for CSS processing
+├── README.md           # Project documentation
 ├── tailwind.config.js  # Tailwind CSS configuration
-└── vite.config.js      # Vite configuration for asset compilation
+└── vite.config.js      # Vite configuration for asset bundling
 ```
 
 ## Job Scheduling: Deleting Unused Files
