@@ -17,8 +17,7 @@ class ResourcesSeeder extends Seeder
             ['name' => 'Users'],
             ['name' => 'Clients'],
             ['name' => 'Projects'],
-            ['name' => 'Tasks'],
-            ['name' => 'Profile']
+            ['name' => 'Tasks']
         ]);
 
         $this->command->info('Resources seeded successfully.');

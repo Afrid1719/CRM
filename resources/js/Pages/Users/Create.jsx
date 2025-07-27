@@ -7,9 +7,10 @@ import TextInput from "@/Components/TextInput";
 import Permissions from "@/Components/Permissions";
 import { useRoles } from "@/Context/RolesContext";
 import Radio from "@/Components/Radio";
+import { Transition } from "@headlessui/react";
 
 export default function Create({ auth, permissions, actions, user = null }) {
-    const { data, setData, post, put, processing, errors, wasSuccessful } =
+    const { data, setData, post, put, processing, errors, recentlySuccessful } =
         useForm({
             avatar: user?.avatar || "",
             name: user?.name || "",
@@ -59,7 +60,13 @@ export default function Create({ auth, permissions, actions, user = null }) {
                                         : "Create User"}
                                 </h2>
                                 <div className="inline-block p-2 text-green-600">
-                                    {wasSuccessful && (
+                                    <Transition
+                                        show={recentlySuccessful}
+                                        enter="transition ease-in-out"
+                                        enterFrom="opacity-0"
+                                        leave="transition ease-in-out"
+                                        leaveTo="opacity-0"
+                                    >
                                         <div className="flex items-center gap-x-1">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -79,9 +86,9 @@ export default function Create({ auth, permissions, actions, user = null }) {
                                                     d="M34.586,14.586l-13.57,13.586l-5.602-5.586l-2.828,2.828l8.434,8.414l16.395-16.414L34.586,14.586z"
                                                 ></path>
                                             </svg>
-                                            {"Saved"}
+                                            Saved
                                         </div>
-                                    )}
+                                    </Transition>
                                 </div>
                             </div>
                             <form onSubmit={submit}>

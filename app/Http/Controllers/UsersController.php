@@ -108,7 +108,7 @@ class UsersController extends Controller
      */
     public function update(UpdateRequest $request, User $user)
     {
-        if ($request->user()->cannot('edit', $user)) {
+        if ($request->user()->cannot('update', $user)) {
             abort(403);
         }
 

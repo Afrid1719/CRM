@@ -33,7 +33,7 @@ class Project extends Model
     protected function deadline(): Attribute
     {
         return Attribute::make(
-            get: fn(string $value) => date('d/n/Y', strtotime($value))
+            get: fn(string $value) => date('Y-m-d', strtotime($value))
         );
     }
 

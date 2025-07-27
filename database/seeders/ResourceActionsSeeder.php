@@ -17,7 +17,7 @@ class ResourceActionsSeeder extends Seeder
             ['name' => PermissionActions::VIEW['name'], 'value' => PermissionActions::VIEW['value'], 'resource_id' => 1],
         ]); // View Permission for Dashboard only
 
-        foreach (range(2, 6) as $resourceId) {
+        foreach (range(2, 5) as $resourceId) {
             DB::table('resource_actions')->insert([
                 ['name' => PermissionActions::VIEW['name'], 'value' => PermissionActions::VIEW['value'], 'resource_id' => $resourceId],
                 ['name' => PermissionActions::CREATE['name'], 'value' => PermissionActions::CREATE['value'], 'resource_id' => $resourceId],

@@ -76,7 +76,7 @@ class TasksController extends Controller
      */
     public function edit(Task $task)
     {
-        if (auth()->user()->cannot('edit', $task)) {
+        if (auth()->user()->cannot('update', $task)) {
             abort(403, "You do not have permission to edit this task.");
         }
 

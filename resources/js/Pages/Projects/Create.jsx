@@ -6,9 +6,10 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import TextArea from "@/Components/TextArea";
 import SelectDropdown from "@/Components/SelectDropdown";
+import { Transition } from "@headlessui/react";
 
 export default function Create({ auth, users, clients, project }) {
-    const { data, setData, post, put, processing, errors, wasSuccessful } =
+    const { data, setData, post, put, processing, errors, recentlySuccessful } =
         useForm({
             title: project?.title || "",
             description: project?.description || "",
@@ -62,7 +63,13 @@ export default function Create({ auth, users, clients, project }) {
                                         : "Create Projectt"}
                                 </h2>
                                 <div className="inline-block p-2 text-green-600">
-                                    {wasSuccessful && (
+                                    <Transition
+                                        show={recentlySuccessful}
+                                        enter="transition ease-in-out"
+                                        enterFrom="opacity-0"
+                                        leave="transition ease-in-out"
+                                        leaveTo="opacity-0"
+                                    >
                                         <div className="flex items-center gap-x-1">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +91,7 @@ export default function Create({ auth, users, clients, project }) {
                                             </svg>
                                             {"Saved"}
                                         </div>
-                                    )}
+                                    </Transition>
                                 </div>
                             </div>
                             <form onSubmit={submit}>
