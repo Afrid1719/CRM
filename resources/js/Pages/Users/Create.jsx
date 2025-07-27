@@ -1,18 +1,23 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, router, useForm } from "@inertiajs/react";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import Permissions from "@/Components/Permissions";
+import { useRoles } from "@/Context/RolesContext";
+import Radio from "@/Components/Radio";
 
 export default function Create({ auth, permissions, actions, user = null }) {
     const { data, setData, post, put, processing, errors, wasSuccessful } =
         useForm({
             avatar: user?.avatar || "",
             name: user?.name || "",
-            email: user?.email || ""
+            email: user?.email || "",
+            role: user?.role || 1
         });
+
+    const { roles } = useRoles();
 
     const submit = (e) => {
         e.preventDefault();
@@ -154,6 +159,37 @@ export default function Create({ auth, permissions, actions, user = null }) {
 
                                         <InputError
                                             message={errors.avatar}
+                                            className="mt-2"
+                                        />
+                                    </div>
+
+                                    <div className="mt-4">
+                                        <div className="block font-medium text-sm text-gray-700 dark:text-gray-300 ">
+                                            Role
+                                        </div>
+                                        <div className="mt-2 flex space-x-2">
+                                            {roles.map((role, idx) => (
+                                                <Radio
+                                                    key={role}
+                                                    name="role"
+                                                    value={idx}
+                                                    checked={data.role === idx}
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "role",
+                                                            Number(
+                                                                e.target.value
+                                                            )
+                                                        )
+                                                    }
+                                                >
+                                                    {role}
+                                                </Radio>
+                                            ))}
+                                        </div>
+
+                                        <InputError
+                                            message={errors.role}
                                             className="mt-2"
                                         />
                                     </div>

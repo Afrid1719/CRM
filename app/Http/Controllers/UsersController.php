@@ -113,9 +113,7 @@ class UsersController extends Controller
         }
 
         $user->update($request->all());
-        return Inertia::render('Users/Create', [
-            'user' => $user
-        ]);
+        return redirect()->route('users.edit', $user->refresh())->with('success', 'User updated successfully');
     }
 
     /**
