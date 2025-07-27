@@ -24,7 +24,7 @@ class UsersController extends Controller
         }
 
         return Inertia::render('Users/Index', [
-            'page' => User::query()->paginate(10),
+            'page' => User::visibleTo(auth()->user())->paginate(10),
         ]);
     }
 
@@ -108,14 +108,12 @@ class UsersController extends Controller
      */
     public function update(UpdateRequest $request, User $user)
     {
-        if ($request->user()->cannot('edit', $user)) {
+        if ($request->user()->cannot('update', $user)) {
             abort(403);
         }
 
         $user->update($request->all());
-        return Inertia::render('Users/Create', [
-            'user' => $user
-        ]);
+        return redirect()->route('users.edit', $user->refresh())->with('success', 'User updated successfully');
     }
 
     /**

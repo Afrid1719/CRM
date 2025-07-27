@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Constants\Roles;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -24,6 +25,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => Hash::make('test12345'), // default password for testing
             'remember_token' => Str::random(10),
+            'role' => fake()->randomKey(Roles::all()), // Randomly assign a role from the Roles constant
         ];
     }
 

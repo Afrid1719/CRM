@@ -5,9 +5,10 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import Checkbox from "@/Components/Checkbox";
+import { Switch, Transition } from "@headlessui/react";
 
 export default function Create({ auth, client = null }) {
-    const { data, setData, post, put, processing, errors, wasSuccessful } =
+    const { data, setData, post, put, processing, errors, recentlySuccessful } =
         useForm({
             name: client?.name || "",
             vat: client?.vat || "",
@@ -60,7 +61,13 @@ export default function Create({ auth, client = null }) {
                                         : "Create Client"}
                                 </h2>
                                 <div className="inline-block p-2 text-green-600">
-                                    {wasSuccessful && (
+                                    <Transition
+                                        show={recentlySuccessful}
+                                        enter="transition ease-in-out"
+                                        enterFrom="opacity-0"
+                                        leave="transition ease-in-out"
+                                        leaveTo="opacity-0"
+                                    >
                                         <div className="flex items-center gap-x-1">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +89,7 @@ export default function Create({ auth, client = null }) {
                                             </svg>
                                             {"Saved"}
                                         </div>
-                                    )}
+                                    </Transition>
                                 </div>
                             </div>
                             <form onSubmit={submit}>
@@ -188,17 +195,38 @@ export default function Create({ auth, client = null }) {
                                     </div>
 
                                     <div className="flex flex-row items-center mt-4">
-                                        <Checkbox
-                                            value={data.isActive}
-                                            id="isActive"
-                                            name="isActive"
-                                            className="mr-2 w-8 h-8 cursor-pointer"
-                                        />
                                         <InputLabel
                                             htmlFor="isActive"
                                             value="Active"
-                                            className="cursor-pointer"
+                                            className="cursor-pointer mr-2"
                                         />
+                                        <Switch
+                                            title={`${
+                                                data.isActive
+                                                    ? "Active"
+                                                    : "Inactive"
+                                            }`}
+                                            checked={data.isActive}
+                                            onChange={(e) => {
+                                                setData("isActive", e);
+                                            }}
+                                            className={`${
+                                                data.isActive
+                                                    ? "bg-indigo-600"
+                                                    : "bg-gray-300"
+                                            } relative inline-flex h-6 w-11 items-center rounded-full`}
+                                        >
+                                            <span className="sr-only">
+                                                Activate Client
+                                            </span>
+                                            <span
+                                                className={`${
+                                                    data.isActive
+                                                        ? "translate-x-6"
+                                                        : "translate-x-1"
+                                                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                                            />
+                                        </Switch>
                                     </div>
                                 </section>
                                 <div className="flex items-center justify-end mt-4">

@@ -86,7 +86,7 @@ class ClientsController extends Controller
      */
     public function edit(Request $request, Client $client)
     {
-        if ($request->user()->cannot('edit', $client)) {
+        if ($request->user()->cannot('update', $client)) {
             abort(403, "You do not have permission to edit this client.");
         }
 
@@ -100,7 +100,7 @@ class ClientsController extends Controller
      */
     public function update(UpdateRequest $request, Client $client)
     {
-        if ($request->user()->cannot('edit', $client)) {
+        if ($request->user()->cannot('update', $client)) {
             abort(403, "Unauthorized action.");
         }
 

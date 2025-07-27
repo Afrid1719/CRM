@@ -8,17 +8,19 @@ import TextInput from "@/Components/TextInput";
 import TextArea from "@/Components/TextArea";
 import SelectDropdown from "@/Components/SelectDropdown";
 import AttachmentsInput from "@/Components/AttachementsInput";
+import { Transition } from "@headlessui/react";
 
 export default function Create({ auth, users, clients, projects, task }) {
-    const { data, setData, post, processing, errors, wasSuccessful } = useForm({
-        title: task?.title || "",
-        description: task?.description || "",
-        assigned_to: task?.assigned_to || "",
-        for_client: task?.for_client || "",
-        related_to_project: task?.related_to_project || "",
-        status: task?.status || false,
-        attachments: null
-    });
+    const { data, setData, post, processing, errors, recentlySuccessful } =
+        useForm({
+            title: task?.title || "",
+            description: task?.description || "",
+            assigned_to: task?.assigned_to || "",
+            for_client: task?.for_client || "",
+            related_to_project: task?.related_to_project || "",
+            status: task?.status || false,
+            attachments: null
+        });
 
     const [attachedFiles, setAttachedFiles] = useState(task?.attachments || []);
     const [clearFileInput, setClearFileInput] = useState(false);
@@ -80,7 +82,13 @@ export default function Create({ auth, users, clients, projects, task }) {
                                         : "Create Task"}
                                 </h2>
                                 <div className="inline-block p-2 text-green-600">
-                                    {wasSuccessful && (
+                                    <Transition
+                                        show={recentlySuccessful}
+                                        enter="transition ease-in-out"
+                                        enterFrom="opacity-0"
+                                        leave="transition ease-in-out"
+                                        leaveTo="opacity-0"
+                                    >
                                         <div className="flex items-center gap-x-1">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +110,7 @@ export default function Create({ auth, users, clients, projects, task }) {
                                             </svg>
                                             {"Saved"}
                                         </div>
-                                    )}
+                                    </Transition>
                                 </div>
                             </div>
                             <form
